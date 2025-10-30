@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>كلين دي | خدمات تنظيف احترافية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { cairo: ['Cairo', 'sans-serif'] },
+          colors: {
+            primary: '#0ea5e9',
+            dark: '#1e293b',
+            silver: '#f1f5f9',
+            skyDark: '#036b9a'
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #0ea5e9; --dark: #1e293b; --silver: #f1f5f9; --sky-dark: #036b9a; }
+    html,body { height:100%; }
+    body { font-family: 'Cairo', sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background: #ffffff; color: var(--dark); scroll-behavior: smooth; }
+    header { transition: all .25s ease, background .35s ease; }
+
+    /* هيدر متموج من اليمين أبيض إلى السماوي (RTL: الأبيض يبدأ من اليمين) */
+    header.initial-gradient {
+      background: linear-gradient(90deg, #ffffff 0%, rgba(14,165,233,0.08) 45%, var(--sky-dark) 100%);
+      background-size: 200% 100%;
+    }
+    /* عندما يمرر المستخدم الصفحة نرجع الشفافية */
+    header.scrolled { background: transparent; backdrop-filter: blur(6px); box-shadow: 0 6px 20px rgba(2,6,23,0.12); }
+
+    .nav-pill {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:5px 10px; border-radius:9999px; background: rgba(255,255,255,0.9);
+      color:var(--dark); font-weight:600; text-decoration:none;
+      transition: transform .12s ease, background .12s ease, color .12s ease;
+      box-shadow: 0 4px 12px rgba(2,6,23,0.05); backdrop-filter: blur(2px);
+      font-size:0.86rem; white-space:nowrap;
+    }
+    .nav-pill:hover { transform: translateY(-2px); background: rgba(255,255,255,0.98); color:var(--primary); }
+    .nav-pill.active { background: var(--primary); color: white; box-shadow: 0 8px 24px rgba(14,165,233,0.18); }
+    .header-inner { padding-top:8px; padding-bottom:8px; }
+    .nav-scroll { display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .nav-scroll::-webkit-scrollbar { display:none; }
+
+    .service-card { transition: transform .35s ease, box-shadow .35s ease; will-change: transform; }
+    .service-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 18px 40px rgba(2,6,23,0.12); }
+
+    .floating-btn { box-shadow: 0 10px 30px rgba(2,6,23,0.12); transition: transform .12s ease, opacity .12s ease; display:flex; align-items:center; justify-content:center; position:fixed; left:20px; z-index:60; border:none; }
+    .floating-whatsapp { width:48px; height:48px; padding:0; border-radius:9999px; background: #16a34a; color:#fff; bottom:20px; z-index:50; text-decoration:none; display:flex; align-items:center; justify-content:center; }
+    .floating-booking { padding:10px 14px; border-radius:9999px; background:var(--primary); color:#fff; font-weight:700; font-size:0.95rem; bottom:86px; z-index:70; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .floating-booking:hover { background:#0891b2; }
+    .floating-whatsapp:hover { background:#13833f; }
+
+    @media (max-width:640px){
+      header .brand { font-size:1rem; }
+      .nav-pill { padding:5px 8px; font-size:0.82rem; }
+      .floating-booking { padding:8px 12px; font-size:0.92rem; bottom:78px; left:16px; }
+      .floating-whatsapp { width:44px; height:44px; bottom:18px; left:16px; }
+    }
+
+    .header-spacer { height:64px; }
+
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(2,6,23,0.35);
+      display: none;
+      align-items: center; justify-content: center; z-index: 90; padding: 20px; pointer-events: auto;
+      backdrop-filter: blur(6px) saturate(110%); -webkit-backdrop-filter: blur(6px) saturate(110%);
+    }
+    .modal-backdrop.show { display:flex; }
+
+    .modal-panel {
+      width:100%; max-width:720px; border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(250,250,252,0.12));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 18px 50px rgba(2,6,23,0.08);
+      padding: 22px; position: relative;
+      backdrop-filter: blur(8px) saturate(110%); -webkit-backdrop-filter: blur(8px) saturate(110%);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @media (max-width:640px){ .modal-panel { padding:16px; border-radius:12px; max-width:92%; } }
+
+    .modal-panel input[type="text"], .modal-panel input[type="tel"], .modal-panel input[type="url"], .modal-panel select, .modal-panel textarea {
+      background: #ffffff; color: #0f172a; border: 1px solid rgba(15,23,42,0.08);
+      box-shadow: 0 6px 18px rgba(2,6,23,0.04) inset; padding: 10px 12px; border-radius: 8px; width: 100%; outline: none;
+    }
+
+    .modal-panel label { color: #0f172a; font-weight: 600; }
+
+    .modal-close { position: absolute; top:12px; left:12px; background: rgba(255,255,255,0.85); border-radius: 8px; padding: 6px 8px; box-shadow: 0 6px 18px rgba(2,6,23,0.06); border:none; cursor:pointer; font-size:18px; color:var(--dark); }
+
+    /* باقات: اقتصادية أبيض؛ متوسطة أغمق؛ متقدمة سماوي أفتح قليلاً */
+    .price-card { border-radius:12px; padding:18px; box-shadow: 0 8px 30px rgba(2,6,23,0.06); border:1px solid rgba(2,6,23,0.04); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .price-badge { background:var(--primary); color:#fff; padding:6px 10px; border-radius:999px; font-weight:700; font-size:0.95rem; display:inline-block; }
+
+    .price-card.economy { background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%); color: var(--dark); }
+    /* التغيير: جعل الباقة المتوسطة أغمق بدرجة */
+    .price-card.standard { background: linear-gradient(180deg, #d7f1ff 0%, rgba(14,165,233,0.24) 55%); color: var(--dark); border-color: rgba(14,165,233,0.12); }
+    /* الباقة المتقدمة أفتح قليلاً كما سابقاً */
+    .price-card.premium { background: linear-gradient(180deg, #4fc3f7 0%, rgba(3,107,154,0.50) 100%); color: #053046; border-color: rgba(3,107,154,0.12); }
+    .price-card.premium .price-note { color: rgba(0,0,0,0.65); }
+    .price-card.premium .price-value { color: #042a38; }
+
+    .price-card.active-package { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(14,165,233,0.12); border-color: rgba(14,165,233,0.18); }
+
+    .pricing-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px dashed rgba(2,6,23,0.04); }
+    .pricing-row:last-child { border-bottom: none; }
+
+    .price-value { font-weight:800; font-size:1.25rem; color:var(--dark); }
+    .price-note { color:#475569; font-size:0.95rem; }
+
+    .sr-only { position: absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    .hero-title { text-wrap: balance; }
+    .hero-sub-wrap { min-height:1.6rem; display:flex; align-items:center; justify-content:center; }
+    .hero-subtitle { color: #f1f5f9; text-shadow: 0 6px 18px rgba(2,6,23,0.35); opacity:0; transition: opacity .5s ease; }
+    .hero-subtitle.show { opacity:1; }
+
+    @media (max-width:640px){
+      .hero-title { font-size: 1.375rem; line-height:1.15; }
+      .hero-subtitle { font-size: 0.95rem; }
+      .hero-sub-wrap { min-height:1.8rem; padding-left:6px; padding-right:6px; }
+      .relative.z-10.flex { padding-left:12px; padding-right:12px; }
+    }
+
+    .packages-mobile-list { display:none; }
+    @media (max-width:767px){
+      .packages-mobile-list { display:flex; gap:8px; justify-content:center; align-items:center; flex-wrap:nowrap; padding:0 8px; }
+      .packages-mobile-list button { flex:1 1 auto; min-width:0; white-space:nowrap; border:1px solid rgba(2,6,23,0.06); background:#fff; color:var(--dark); font-weight:700; padding:8px 10px; border-radius:9999px; }
+      .packages-mobile-list button.active-mobile { background:var(--primary); color:#fff; border-color:transparent; box-shadow: 0 8px 20px rgba(14,165,233,0.12); }
+      .price-card.mobile-hidden { display:none; }
+    }
+
+    /* تأثير إغلاق/فتح نص زر الحجز */
+    .floating-booking .booking-text { display:inline-block; transform-origin:center; transition: transform .35s ease, opacity .25s ease; }
+    .floating-booking.closed .booking-text { transform: scaleX(0); opacity:0; }
+  </style>
+</head>
+<body>
+
+  <!-- زر الحجز العائم -->
+  <button aria-label="الحجز" class="floating-btn floating-booking" id="floatingBookingBtn">
+    <span class="booking-text">الحجز</span>
+  </button>
+
+  <!-- واتساب عائم -->
+  <a href="https://wa.me/966554778029" target="_blank" aria-label="واتساب" class="floating-btn floating-whatsapp" id="floatingWhatsappBtn">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" style="width:20px;height:20px;">
+      <path d="M16 0C7.164 0 0 6.832 0 15.264c0 2.688.736 5.2 2.016 7.44L0 32l9.472-2.496c1.92.528 3.936.8 6.048.8 8.832 0 16-6.832 16-15.264S24.832 0 16 0z"/>
+    </svg>
+  </a>
+
+  <!-- الشريط العلوي: يبدأ بالتدرج ثم عند التمرير يصبح شفاف -->
+  <header id="siteHeader" class="fixed top-0 left-0 w-full z-50 initial-gradient">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 header-inner">
+      <div class="flex items-center gap-4">
+        <div class="brand text-primary font-bold text-lg cursor-pointer" onclick="scrollToTop()">كلين دي</div>
+      </div>
+
+      <nav class="nav-scroll" aria-label="رابط الأقسام">
+        <a href="#services" class="nav-pill nav-link" data-target="services">الخدمات</a>
+        <a href="#pricing" class="nav-pill nav-link" data-target="pricing">الأسعار</a>
+        <a href="#about" class="nav-pill nav-link" data-target="about">من نحن</a>
+        <a href="#contact" class="nav-pill nav-link" data-target="contact">تواصل معنا</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="header-spacer"></div>
+
+  <!-- الهيدر -->
+  <section class="relative h-[80vh] bg-cover bg-center bg-no-repeat" style="background-image:url('./header.jpg');">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
+      <h1 class="hero-title text-4xl md:text-5xl font-extrabold mb-2 leading-tight">كلين دي في خدمتك يومياً</h1>
+
+      <div class="hero-sub-wrap mb-4">
+        <p id="heroSubtitle" class="hero-subtitle text-lg md:text-xl">نظافة احترافية بمعايير الشركات الكبرى</p>
+      </div>
+
+      <button id="heroBookingBtn" class="px-6 py-3 bg-white text-primary font-bold rounded-full hover:bg-slate-100 transition">احجز الآن</button>
+    </div>
+  </section>
+
+  <!-- خدمات -->
+  <section id="services" class="py-20 bg-silver px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-10">خدماتنا</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div id="card1" class="service-card relative rounded-xl overflow-hidden h-64 shadow" style="background-image:url('./cleaning1.jpg'); background-size:cover; background-position:center;">
+          <div class="absolute inset-0 bg-black/45 z-10"></div>
+          <div class="relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-4">
+            <h3 class="text-2xl font-semibold mb-2">تنظيف المنازل بعد البناء</h3>
+            <ul class="text-sm space-y-1">
+              <li>إزالة بقايا البناء والغبار</li>
+              <li>تنظيف الأرضيات والنوافذ</li>
+              <li>تنظيم ومسح شامل</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="card2" class="service-card relative rounded-xl overflow-hidden h-64 shadow" style="background-image:url('./cleaning2.jpg'); background-size:cover; background-position:center;">
+          <div class="absolute inset-0 bg-black/45 z-10"></div>
+          <div class="relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-4">
+            <h3 class="text-2xl font-semibold mb-2">تنظيف المكاتب</h3>
+            <ul class="text-sm space-y-1">
+              <li>تنظيف الأسطح والأجهزة</li>
+              <li>كنس ومسح وتنظيف الكنب</li>
+              <li>تنظيف الممرات والمرافق</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="card3" class="service-card relative rounded-xl overflow-hidden h-64 shadow" style="background-image:url('./cleaning3.jpg'); background-size:cover; background-position:center;">
+          <div class="absolute inset-0 bg-black/45 z-10"></div>
+          <div class="relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-4">
+            <h3 class="text-2xl font-semibold mb-2">تنظيف الأثاث والسجاد</h3>
+            <ul class="text-sm space-y-1">
+              <li>تنظيف الكنب والمجالس</li>
+              <li>تنظيف السجاد والموكيت</li>
+              <li>تنظيف الستائر والفرش</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- قسم الأسعار -->
+  <section id="pricing" class="py-16 bg-white px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-6">احسب سعر خدمتك</h2>
+      <p class="text-center text-gray-600 mb-8">اختر نوع الخدمة والمساحة للحصول على سعر إرشادي</p>
+
+      <!-- قائمة أسماء الباقات للجوال: صف واحد يناسب شاشة الهاتف -->
+      <div class="packages-mobile-list mb-6 md:hidden" id="packagesMobile">
+        <button type="button" id="btn-economy" class="px-3 py-2 text-sm font-semibold" onclick="userSelectPackage('card-economy')">اقتصادية</button>
+        <button type="button" id="btn-standard" class="px-3 py-2 text-sm font-semibold" onclick="userSelectPackage('card-standard')">متوسطة</button>
+        <button type="button" id="btn-premium" class="px-3 py-2 text-sm font-semibold" onclick="userSelectPackage('card-premium')">متقدمة</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- بطاقة 1 (اقتصادية - أبيض) -->
+        <div id="card-economy" class="price-card economy mobile-hidden">
+          <div class="mb-3"><span class="price-badge">باقة اقتصادية</span></div>
+          <p class="text-gray-600 mb-4">مثالية للمساحات الصغيرة أو التنظيف السريع</p>
+          <div class="pricing-row">
+            <div>
+              <div class="price-note">سعر تقريبي لغرفة</div>
+              <div class="price-value">120 ر.س</div>
+            </div>
+            <div class="text-right">
+              <div class="price-note">مدة تقريبية</div>
+              <div>حتى 2 ساعة</div>
+            </div>
+          </div>
+          <ul class="text-sm text-gray-600 space-y-1 my-4">
+            <li>كنس ومسح؛ تنظيف الأسطح</li>
+            <li>ترتيب عام</li>
+          </ul>
+          <button class="w-full bg-primary text-white py-2 rounded-md" onclick="openBooking('تنظيف سريع')">احجز هذه الباقة</button>
+        </div>
+
+        <!-- بطاقة 2 (متوسطة - أغمق كما طلبت) -->
+        <div id="card-standard" class="price-card standard mobile-hidden">
+          <div class="mb-3"><span class="price-badge">باقة متوسطة</span></div>
+          <p class="text-gray-600 mb-4">مناسبة للمنازل متوسطة الحجم</p>
+          <div class="pricing-row">
+            <div>
+              <div class="price-note">سعر تقريبي لغرفة</div>
+              <div class="price-value">300 ر.س</div>
+            </div>
+            <div class="text-right">
+              <div class="price-note">مدة تقريبية</div>
+              <div>حتى 4 ساعات</div>
+            </div>
+          </div>
+          <ul class="text-sm text-gray-600 space-y-1 my-4">
+            <li>تنظيف عميق للأسطح والأثاث</li>
+            <li>تنظيف سجاد/موكيت (أساسي)</li>
+          </ul>
+          <button class="w-full bg-primary text-white py-2 rounded-md" onclick="openBooking('تنظيف شامل')">احجز هذه الباقة</button>
+        </div>
+
+        <!-- بطاقة 3 (متقدمة - سماوي فاتح) -->
+        <div id="card-premium" class="price-card premium mobile-hidden">
+          <div class="mb-3"><span class="price-badge">باقة متقدمة</span></div>
+          <p class="text-gray-100 mb-4">خدمات مخصّصة للمواقع التي تحتاج معدات خاصة</p>
+          <div class="pricing-row">
+            <div>
+              <div class="price-note">سعر تقريبي</div>
+              <div class="price-value">من 600 ر.س</div>
+            </div>
+            <div class="text-right">
+              <div class="price-note">مدة تقريبية</div>
+              <div>حسب الحجم</div>
+            </div>
+          </div>
+          <ul class="text-sm text-gray-100 space-y-1 my-4">
+            <li>إزالة مخلفات البناء؛ تنظيف شامل</li>
+            <li>معدات وتنظيف عميق</li>
+          </ul>
+          <button class="w-full bg-primary text-white py-2 rounded-md" onclick="openBooking('تنظيف بعد البناء')">احجز هذه الباقة</button>
+        </div>
+      </div>
+
+      <!-- حاسبة السعر -->
+      <div class="bg-silver p-6 rounded-lg">
+        <h4 class="text-lg font-semibold mb-3">حاسبة سريعة للسعر</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block mb-2 font-semibold text-gray-700">نوع الخدمة</label>
+            <select id="calc_service" class="w-full border border-gray-300 rounded px-3 py-2">
+              <option value="تنظيف سريع">تنظيف سريع</option>
+              <option value="تنظيف شامل">تنظيف شامل</option>
+              <option value="تنظيف بعد البناء">تنظيف بعد البناء</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-2 font-semibold text-gray-700">المساحة (م²)</label>
+            <input id="calc_area" type="number" min="10" value="50" class="w-full border border-gray-300 rounded px-3 py-2" />
+          </div>
+          <div class="flex items-end">
+            <button onclick="calculatePrice()" class="w-full bg-primary text-white py-2 rounded-md">احسب السعر</button>
+          </div>
+        </div>
+
+        <div id="calcResult" class="mt-4 text-right text-lg font-bold text-dark"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- مودال الحجز -->
+  <div id="bookingModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="bookingTitle" aria-hidden="true">
+    <div class="modal-panel" role="document" aria-describedby="bookingDesc">
+      <button class="modal-close" id="modalCloseBtn" aria-label="إغلاق">✕</button>
+
+      <h2 id="bookingTitle" class="text-2xl font-bold mb-2 text-center">نموذج الحجز</h2>
+      <p id="bookingDesc" class="text-sm text-gray-600 text-center mb-4">اختر نوع التنظيف وأدخل بياناتك ليصلك عرض عبر واتساب</p>
+
+      <form id="modalBookingForm" class="space-y-4" onsubmit="sendModalToWhatsApp(event)">
+        <div>
+          <label class="block mb-2 font-semibold text-gray-700">الاسم</label>
+          <input id="modal_name" name="name" type="text" required />
+        </div>
+        <div>
+          <label class="block mb-2 font-semibold text-gray-700">رقم الجوال</label>
+          <input id="modal_phone" name="phone" type="tel" required />
+        </div>
+
+        <div>
+          <label class="block mb-2 font-semibold text-gray-700">نوع التنظيف</label>
+          <select id="modal_service_type" name="service_type" required class="">
+            <option value="">اختر نوع التنظيف</option>
+            <option>تنظيف سريع</option>
+            <option>تنظيف شامل</option>
+            <option>تنظيف بعد البناء</option>
+            <option>تنظيف أثاث وسجاد</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-2 font-semibold text-gray-700">المدينة</label>
+            <select id="modal_city" name="city" required>
+              <option value="الرياض">الرياض</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-2 font-semibold text-gray-700">الحي</label>
+            <select id="modal_district" name="district">
+              <option value="">اختر الحي</option>
+              <option>الملز</option><option>النخيل</option><option>العليا</option><option>الشعلة</option><option>الروضة</option>
+              <option>النسيم</option><option>اليرموك</option><option>الصحافة</option><option>السويدي</option><option>الشميسي</option>
+              <option>النهضة</option><option>الربوة</option><option>الرياض الجديدة</option><option>الشفا</option><option>الزهراء</option>
+              <option>الفيصلية</option><option>البديعة</option><option>الملقا</option><option>العقيق</option><option>الحمراء</option>
+              <option>النسيم الغربي</option><option>النسيم الشرقي</option><option>السلي</option><option>الشميسية</option><option>الدرعية</option>
+              <option>الناصرية</option><option>الغدير</option><option>العزيزية</option><option>المرقب</option><option>الوزيرية</option>
+              <option>الخالدية</option><option>النهضة الشمالية</option><option>الجنادرية</option><option>المنطقة المركزية</option><option>السويدي الشمالي</option>
+              <option>المرسلات</option>
+              <!-- أضف أو عدّل القوائم حسب الحاجة -->
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block mb-2 font-semibold text-gray-700">رابط الموقع من خرائط Google (اختياري)</label>
+          <input id="modal_maplink" name="maplink" type="url" placeholder="https://maps.google.com/..." />
+        </div>
+
+        <input type="hidden" id="selectedPackage" name="package" value="">
+
+        <div class="flex gap-3">
+          <button type="submit" class="flex-1 bg-primary text-white py-3 rounded-full hover:bg-sky-700 transition font-semibold">إرسال الحجز عبر واتساب</button>
+          <button type="button" class="flex-1 bg-gray-200 text-dark py-3 rounded-full hover:bg-gray-300 transition font-semibold" id="modalCancelBtn">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- من نحن -->
+  <section id="about" class="py-20 bg-white px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-6">من نحن</h2>
+      <div class="text-lg text-gray-700 space-y-4 leading-relaxed">
+        <p>كلين دي شركة تنظيف احترافية تعمل داخل المملكة العربية السعودية لتقديم خدمات تنظيف شاملة بجودة عالية ومعايير أمان صارمة.</p>
+        <p>نؤمن أن النظافة تجربة متكاملة تبدأ من التخطيط والتنظيم ثم التنفيذ الدقيق، لذلك نستخدم أدوات متطورة ومواد آمنة لضمان بيئة سليمة لعملائنا.</p>
+        <p>فريقنا محترف ومدرّب على بروتوكولات النظافة الحديثة وخدمة العملاء، ونحن نتابع الطلب خطوة بخطوة حتى الوصول لرضا العميل التام.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- تواصل معنا -->
+  <section id="contact" class="py-16 bg-silver px-4">
+    <div class="max-w-3xl mx-auto text-center text-lg text-gray-700 space-y-3">
+      <p>رقم الجوال: <a href="tel:966554778029" class="text-primary hover:underline">966554778029</a></p>
+      <p>البريد الإلكتروني: <a href="mailto:info@cleandy.com" class="text-primary hover:underline">info@cleandy.com</a></p>
+      <p>الموقع: الرياض، المملكة العربية السعودية</p>
+      <p>واتساب: <a href="https://wa.me/966554778029" target="_blank" class="text-green-600 hover:underline">اضغط هنا للتواصل</a></p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 text-center text-sm text-gray-500">
+    ©️ <span id="year"></span> كلين دي. جميع الحقوق محفوظة.
+  </footer>
+
+  <script>
+    // تغيير صور البطاقات تلقائياً
+    (function(){
+      const images1 = ['./cleaning1.jpg','./cleaning1b.jpg','./cleaning1c.jpg'];
+      const images2 = ['./cleaning2.jpg','./cleaning2b.jpg','./cleaning2c.jpg'];
+      const images3 = ['./cleaning3.jpg','./cleaning3b.jpg','./cleaning3c.jpg'];
+      let i1=0,i2=0,i3=0;
+      const c1 = document.getElementById('card1');
+      const c2 = document.getElementById('card2');
+      const c3 = document.getElementById('card3');
+      if(c1) c1.style.backgroundImage = `url('${images1[0]}')`;
+      if(c2) c2.style.backgroundImage = `url('${images2[0]}')`;
+      if(c3) c3.style.backgroundImage = `url('${images3[0]}')`;
+
+      setInterval(()=> {
+        if(c1) { i1=(i1+1)%images1.length; c1.style.backgroundImage = `url('${images1[i1]}')`; }
+        if(c2) { i2=(i2+1)%images2.length; c2.style.backgroundImage = `url('${images2[i2]}')`; }
+        if(c3) { i3=(i3+1)%images3.length; c3.style.backgroundImage = `url('${images3[i3]}')`; }
+      }, 2200);
+    })();
+
+    // مودال: عناصر وسلوك
+    const bookingModal = document.getElementById('bookingModal');
+    const floatingBookingBtn = document.getElementById('floatingBookingBtn');
+    const heroBookingBtn = document.getElementById('heroBookingBtn');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalCancelBtn = document.getElementById('modalCancelBtn');
+    const selectedPackageInput = document.getElementById('selectedPackage');
+
+    function openBooking(packageName) {
+      if(packageName) {
+        selectedPackageInput.value = packageName;
+        const sel = document.getElementById('modal_service_type');
+        if(sel && Array.from(sel.options).some(o=>o.value===packageName)) sel.value = packageName;
+      } else {
+        selectedPackageInput.value = '';
+      }
+      bookingModal.classList.add('show');
+      bookingModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      const first = document.getElementById('modal_name');
+      if(first) first.focus();
+    }
+
+    function closeBooking() {
+      bookingModal.classList.remove('show');
+      bookingModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    if(floatingBookingBtn) floatingBookingBtn.addEventListener('click', ()=> openBooking());
+    if(heroBookingBtn) heroBookingBtn.addEventListener('click', ()=> openBooking());
+
+    if(modalCloseBtn) modalCloseBtn.addEventListener('click', closeBooking);
+    if(modalCancelBtn) modalCancelBtn.addEventListener('click', closeBooking);
+
+    bookingModal.addEventListener('click', function(e){
+      if(e.target === bookingModal) {
+        closeBooking();
+      }
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && bookingModal.classList.contains('show')) closeBooking();
+    });
+
+    // إرسال بيانات المودال إلى واتساب
+    function sendModalToWhatsApp(e){
+      e.preventDefault();
+      const name = document.getElementById('modal_name').value.trim();
+      const phone = document.getElementById('modal_phone').value.trim();
+      const city = document.getElementById('modal_city').value;
+      const district = document.getElementById('modal_district').value;
+      const maplink = document.getElementById('modal_maplink').value.trim();
+      const pkg = document.getElementById('selectedPackage').value;
+      const serviceType = document.getElementById('modal_service_type').value;
+
+      if(!name || !phone || !serviceType){
+        alert('الرجاء إدخال الاسم، رقم الجوال، واختيار نوع التنظيف');
+        return;
+      }
+
+      let message = `طلب حجز جديد:%0Aالاسم: ${name}%0Aالجوال: ${phone}%0Aالخدمة: ${serviceType}%0Aالمدينة: ${city}`;
+      if(district) message += `%0Aالحي: ${district}`;
+      if(pkg) message += `%0Aالباقة المختارة: ${pkg}`;
+      if(maplink) message += `%0Aرابط الموقع: ${maplink}`;
+
+      const whatsappNumber = '966554778029';
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(decodeURIComponent(message))}`, '_blank');
+
+      closeBooking();
+    }
+
+    // حاسبة السعر البسيطة
+    function calculatePrice(){
+      const service = document.getElementById('calc_service').value;
+      const area = parseFloat(document.getElementById('calc_area').value) || 0;
+      let basePerM2 = 0;
+
+      if(service === 'تنظيف سريع') basePerM2 = 2.4;
+      else if(service === 'تنظيف شامل') basePerM2 = 5.5;
+      else if(service === 'تنظيف بعد البناء') basePerM2 = 8.0;
+
+      let estimated = Math.max(Math.round(basePerM2 * area), 100);
+      document.getElementById('calcResult').textContent = `السعر التقريبي: ${estimated.toLocaleString()} ر.س ( ${service} - ${area} م² )`;
+    }
+
+    // سلوك الهيدر: عند التمرير نجعل الخلفية شفافة وارجع التدرج عندما تعود الى الأعلى
+    (function(){
+      const header = document.getElementById('siteHeader');
+      const brand = document.querySelector('.brand');
+      const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+      const sections = ['services','pricing','about','contact'].map(id=>document.getElementById(id)).filter(Boolean);
+
+      function onScroll(){
+        if(window.scrollY > 20) {
+          header.classList.add('scrolled');
+          header.classList.remove('initial-gradient');
+          if(brand) brand.style.color = '#000';
+        } else {
+          header.classList.remove('scrolled');
+          header.classList.add('initial-gradient');
+          if(brand) brand.style.color = '';
+        }
+
+        let currentId = '';
+        for(let i=0;i<sections.length;i++){
+          const s = sections[i];
+          const rect = s.getBoundingClientRect();
+          if(rect.top <= 120) currentId = s.id;
+        }
+        navLinks.forEach(a => {
+          a.classList.remove('active');
+          if(a.getAttribute('href') === `#${currentId}`) a.classList.add('active');
+        });
+      }
+
+      navLinks.forEach(a=>{
+        a.addEventListener('click', function(e){
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if(!target) return;
+          const headerHeight = document.getElementById('siteHeader').offsetHeight;
+          const top = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+          window.scrollTo({ top, behavior:'smooth' });
+        }, {passive:false});
+      });
+
+      window.addEventListener('scroll', onScroll, { passive:true });
+      window.addEventListener('load', onScroll);
+    })();
+
+    // --- التنقل الآلي بين تفاصيل الباقات على الجوال مع إيقاف مؤقت 8 ثواني عند التفاعل ---
+    (function(){
+      const mobileIds = ['card-economy','card-standard','card-premium'];
+      const btnMap = {
+        'card-economy': document.getElementById('btn-economy'),
+        'card-standard': document.getElementById('btn-standard'),
+        'card-premium': document.getElementById('btn-premium')
+      };
+      let autoIndex = 0;
+      let autoTimer = null;
+      let pauseUntil = 0;
+      const AUTO_INTERVAL = 2500; // تنقّل كل 2.5 ثانية
+      const PAUSE_MS = 12000; // الآن 8 ثواني انتظار بعد تفاعل المستخدم
+
+      function hideAllMobileCards(){
+        mobileIds.forEach(id=>{
+          const el = document.getElementById(id);
+          if(el) {
+            el.classList.add('mobile-hidden');
+            el.classList.remove('active-package');
+          }
+        });
+        Object.values(btnMap).forEach(b=>{ if(b) b.classList.remove('active-mobile'); });
+      }
+
+      function showCard(id){
+        hideAllMobileCards();
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.classList.remove('mobile-hidden');
+        el.classList.add('active-package');
+        const btn = btnMap[id];
+        if(btn) btn.classList.add('active-mobile');
+      }
+
+      function rotateStep(){
+        if(window.innerWidth > 767) return;
+        if(Date.now() < pauseUntil) return;
+        const id = mobileIds[autoIndex % mobileIds.length];
+        showCard(id);
+        autoIndex = (autoIndex + 1) % mobileIds.length;
+      }
+
+      function startAutoRotate(){
+        stopAutoRotate();
+        rotateStep(); // عرض فوري
+        autoTimer = setInterval(rotateStep, AUTO_INTERVAL);
+      }
+
+      function stopAutoRotate(){
+        if(autoTimer) {
+          clearInterval(autoTimer);
+          autoTimer = null;
+        }
+      }
+
+      // استدعاء عند اختيار المستخدم (نقرة على اسم باقة)
+      window.userSelectPackage = function(id){
+        showCard(id);
+        pauseUntil = Date.now() + PAUSE_MS; // الآن ينتظر 8 ثواني قبل الاستئناف
+        autoIndex = mobileIds.indexOf(id);
+        if(autoIndex < 0) autoIndex = 0;
+        autoIndex = (autoIndex + 1) % mobileIds.length;
+      };
+
+      // إعادة الحالة عند تغيير الحجم
+      window.addEventListener('resize', function(){
+        if(window.innerWidth > 767){
+          mobileIds.forEach(id=>{
+            const el = document.getElementById(id);
+            if(el) {
+              el.classList.remove('mobile-hidden');
+              el.classList.remove('active-package');
+            }
+          });
+          Object.values(btnMap).forEach(b=>{ if(b) b.classList.remove('active-mobile'); });
+          stopAutoRotate();
+        } else {
+          hideAllMobileCards();
+          startAutoRotate();
+        }
+      }, { passive:true });
+
+      // تهيئة عند التحميل
+      window.addEventListener('load', function(){
+        if(window.innerWidth <= 767){
+          hideAllMobileCards();
+          startAutoRotate();
+        } else {
+          mobileIds.forEach(id=>{
+            const el = document.getElementById(id);
+            if(el) el.classList.remove('mobile-hidden');
+          });
+        }
+      }, { passive:true });
+
+      // إذا نقر المستخدم على البطاقة نفسها نعتبره تفاعل يوقف التبديل 8s
+      mobileIds.forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('click', function(){
+          pauseUntil = Date.now() + PAUSE_MS;
+        }, {passive:true});
+      });
+    })();
+
+    // ضبط روابط الرقم تلقائياً
+    (function(){
+      const phone = '966554778029';
+      const fwh = document.getElementById('floatingWhatsappBtn');
+      if(fwh) fwh.setAttribute('href', `https://wa.me/${phone}`);
+      document.querySelectorAll('a[href^="https://wa.me/"]').forEach(a=> a.setAttribute('href', `https://wa.me/${phone}`));
+      document.querySelectorAll('a[href^="tel:"]').forEach(a=> a.setAttribute('href', `tel:${phone}`));
+    })();
+
+    // تأثير إغلاق وفتح نص زر الحجز كل 10 ثواني
+    (function(){
+      const btn = document.getElementById('floatingBookingBtn');
+      if(!btn) return;
+      const INTERVAL = 10000;
+      const CLOSED_DURATION = 800;
+      function doPulse(){
+        btn.classList.add('closed');
+        setTimeout(()=> btn.classList.remove('closed'), CLOSED_DURATION);
+      }
+      setTimeout(() => {
+        doPulse();
+        setInterval(doPulse, INTERVAL);
+      }, 800);
+    })();
+
+    // footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // focus outlines
+    document.querySelectorAll('.nav-pill,a,button').forEach(el=>{
+      el.addEventListener('focus', ()=> el.classList.add('ring-2','ring-offset-2'), {passive:true});
+      el.addEventListener('blur', ()=> el.classList.remove('ring-2','ring-offset-2'), {passive:true});
+    });
+
+    // عبارات الهيدر المتغيرة: تمت إضافة 3 عبارات إضافية (المجموع الآن 8)
+    (function(){
+      const subtitles = [
+        "نظافة احترافية بمعايير الشركات الكبرى",
+        "خدمة سريعة وآمنة لمنزلك أو مكتبك",
+        "فِرق مُدربة ومعدات متطورة",
+        "حجز سهل و متابعة حتى الرضا التام",
+        "تنظيف بعد البناء مع معدات خاصة",
+        "مواد تنظيف آمنة وصديقة للعائلة",
+        "دقة في المواعيد واهتمام بالتفاصيل",
+        "خدمة ما بعد التنفيذ لضمان الرضا"
+      ];
+
+      const el = document.getElementById('heroSubtitle');
+      if(!el) return;
+
+      let idx = 0;
+      function showNext(){
+        el.classList.remove('show');
+        setTimeout(()=> {
+          el.textContent = subtitles[idx];
+          el.classList.add('show');
+          idx = (idx + 1) % subtitles.length;
+        }, 250);
+      }
+
+      el.textContent = subtitles[0];
+      setTimeout(()=> el.classList.add('show'), 80);
+      idx = 1;
+
+      const intervalMs = 3000;
+      let rot = setInterval(showNext, intervalMs);
+
+      const heroBtn = document.getElementById('heroBookingBtn');
+      if(heroBtn){
+        heroBtn.addEventListener('click', ()=> {
+          clearInterval(rot);
+        }, {passive:true});
+      }
+
+      document.addEventListener('visibilitychange', function(){
+        if(document.hidden) clearInterval(rot);
+        else rot = setInterval(showNext, intervalMs);
+      }, {passive:true});
+    })();
+  </script>
+
+</body>
+</html>
