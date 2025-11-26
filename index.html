@@ -20,20 +20,24 @@
       }
     }
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root { --primary: #0ea5e9; --dark: #1e293b; --silver: #f1f5f9; --sky-dark: #036b9a; }
     html,body { height:100%; }
     body { font-family: 'Cairo', sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background: #ffffff; color: var(--dark); scroll-behavior: smooth; }
     header { transition: all .25s ease, background .35s ease; }
 
-    /* هيدر متموج من اليمين أبيض إلى السماوي (RTL: الأبيض يبدأ من اليمين) */
+    /* هيدر متموج */
     header.initial-gradient {
       background: linear-gradient(90deg, #ffffff 0%, rgba(14,165,233,0.08) 45%, var(--sky-dark) 100%);
       background-size: 200% 100%;
     }
-    /* عندما يمرر المستخدم الصفحة نرجع الشفافية */
     header.scrolled { background: transparent; backdrop-filter: blur(6px); box-shadow: 0 6px 20px rgba(2,6,23,0.12); }
+
+    /* تثبيت الصورة الخلفية */
+    #hero-section {
+      background-attachment: fixed;
+    }
 
     .nav-pill {
       display:inline-flex; align-items:center; justify-content:center;
@@ -49,7 +53,10 @@
     .nav-scroll { display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .nav-scroll::-webkit-scrollbar { display:none; }
 
-    .service-card { transition: transform .35s ease, box-shadow .35s ease; will-change: transform; }
+    .service-card { 
+        cursor: pointer; 
+        transition: transform .35s ease, box-shadow .35s ease; will-change: transform; 
+    }
     .service-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 18px 40px rgba(2,6,23,0.12); }
 
     .floating-btn { box-shadow: 0 10px 30px rgba(2,6,23,0.12); transition: transform .12s ease, opacity .12s ease; display:flex; align-items:center; justify-content:center; position:fixed; left:20px; z-index:60; border:none; }
@@ -69,43 +76,81 @@
 
     .modal-backdrop {
       position: fixed; inset: 0;
-      background: rgba(2,6,23,0.35);
+      background: rgba(0,0,0,0.65); 
       display: none;
       align-items: center; justify-content: center; z-index: 90; padding: 20px; pointer-events: auto;
-      backdrop-filter: blur(6px) saturate(110%); -webkit-backdrop-filter: blur(6px) saturate(110%);
+      backdrop-filter: blur(5px);
     }
     .modal-backdrop.show { display:flex; }
 
+    /* المودال بشفافية عالية جداً (25% أبيض) + تمويه قوي */
     .modal-panel {
-      width:100%; max-width:720px; border-radius: 14px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(250,250,252,0.12));
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 18px 50px rgba(2,6,23,0.08);
-      padding: 22px; position: relative;
-      backdrop-filter: blur(8px) saturate(110%); -webkit-backdrop-filter: blur(8px) saturate(110%);
+      width:100%; max-width:720px; border-radius: 16px;
+      background: rgba(255, 255, 255, 0.25); 
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+      padding: 24px; position: relative;
+      backdrop-filter: blur(22px) saturate(160%); 
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
       max-height: 90vh;
       overflow-y: auto;
     }
 
-    @media (max-width:640px){ .modal-panel { padding:16px; border-radius:12px; max-width:92%; } }
+    @media (max-width:640px){ .modal-panel { padding:18px; border-radius:14px; max-width:94%; } }
 
-    .modal-panel input[type="text"], .modal-panel input[type="tel"], .modal-panel input[type="url"], .modal-panel select, .modal-panel textarea {
-      background: #ffffff; color: #0f172a; border: 1px solid rgba(15,23,42,0.08);
-      box-shadow: 0 6px 18px rgba(2,6,23,0.04) inset; padding: 10px 12px; border-radius: 8px; width: 100%; outline: none;
+    /* الخانات: بيضاء بنسبة 80% لتبرز عن الخلفية الزجاجية */
+    .modal-panel input, 
+    .modal-panel select, 
+    .modal-panel textarea {
+      background: rgba(255, 255, 255, 0.80); 
+      color: #0f172a; 
+      border: 1px solid rgba(255,255,255,0.4);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+      padding: 11px 14px; border-radius: 10px; width: 100%; outline: none;
+      font-weight: 600; transition: all 0.2s ease;
+    }
+    
+    .modal-panel input:focus, .modal-panel select:focus, .modal-panel textarea:focus {
+        background: #ffffff;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
     }
 
-    .modal-panel label { color: #0f172a; font-weight: 600; }
+    .modal-panel label {
+      color: #0f172a; 
+      font-weight: 800; 
+      margin-bottom: 6px;
+      display: block;
+      font-size: 0.95rem;
+      text-shadow: none;
+    }
+    
+    .modal-panel h2 { 
+        font-weight: 900; font-size: 1.75rem; margin-bottom: 0.5rem; 
+        color: #0f172a;
+        text-shadow: none;
+    }
+    
+    .modal-panel p#bookingDesc {
+      color: #1e293b;
+      font-weight: 600;
+      text-shadow: none;
+    }
 
-    .modal-close { position: absolute; top:12px; left:12px; background: rgba(255,255,255,0.85); border-radius: 8px; padding: 6px 8px; box-shadow: 0 6px 18px rgba(2,6,23,0.06); border:none; cursor:pointer; font-size:18px; color:var(--dark); }
+    .modal-close { 
+        position: absolute; top:16px; left:16px; 
+        background: rgba(255,255,255,0.7); border-radius: 50%; width: 36px; height: 36px; 
+        display:flex; align-items:center; justify-content:center;
+        border:none; cursor:pointer; font-size:18px; color:#334155; 
+        transition: all 0.2s;
+    }
+    .modal-close:hover { background: #ffffff; color: #000; }
 
-    /* باقات: اقتصادية أبيض؛ متوسطة أغمق؛ متقدمة سماوي أفتح قليلاً */
     .price-card { border-radius:12px; padding:18px; box-shadow: 0 8px 30px rgba(2,6,23,0.06); border:1px solid rgba(2,6,23,0.04); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
     .price-badge { background:var(--primary); color:#fff; padding:6px 10px; border-radius:999px; font-weight:700; font-size:0.95rem; display:inline-block; }
 
     .price-card.economy { background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%); color: var(--dark); }
-    /* التغيير: جعل الباقة المتوسطة أغمق بدرجة */
     .price-card.standard { background: linear-gradient(180deg, #d7f1ff 0%, rgba(14,165,233,0.24) 55%); color: var(--dark); border-color: rgba(14,165,233,0.12); }
-    /* الباقة المتقدمة أفتح قليلاً كما سابقاً */
     .price-card.premium { background: linear-gradient(180deg, #4fc3f7 0%, rgba(3,107,154,0.50) 100%); color: #053046; border-color: rgba(3,107,154,0.12); }
     .price-card.premium .price-note { color: rgba(0,0,0,0.65); }
     .price-card.premium .price-value { color: #042a38; }
@@ -140,26 +185,22 @@
       .price-card.mobile-hidden { display:none; }
     }
 
-    /* تأثير إغلاق/فتح نص زر الحجز */
     .floating-booking .booking-text { display:inline-block; transform-origin:center; transition: transform .35s ease, opacity .25s ease; }
     .floating-booking.closed .booking-text { transform: scaleX(0); opacity:0; }
   </style>
 </head>
 <body>
 
-  <!-- زر الحجز العائم -->
   <button aria-label="الحجز" class="floating-btn floating-booking" id="floatingBookingBtn">
     <span class="booking-text">الحجز</span>
   </button>
 
-  <!-- واتساب عائم -->
   <a href="https://wa.me/966554778029" target="_blank" aria-label="واتساب" class="floating-btn floating-whatsapp" id="floatingWhatsappBtn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" style="width:20px;height:20px;">
       <path d="M16 0C7.164 0 0 6.832 0 15.264c0 2.688.736 5.2 2.016 7.44L0 32l9.472-2.496c1.92.528 3.936.8 6.048.8 8.832 0 16-6.832 16-15.264S24.832 0 16 0z"/>
     </svg>
   </a>
 
-  <!-- الشريط العلوي: يبدأ بالتدرج ثم عند التمرير يصبح شفاف -->
   <header id="siteHeader" class="fixed top-0 left-0 w-full z-50 initial-gradient">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-4 header-inner">
       <div class="flex items-center gap-4">
@@ -177,11 +218,10 @@
 
   <div class="header-spacer"></div>
 
-  <!-- الهيدر -->
-  <section class="relative h-[80vh] bg-cover bg-center bg-no-repeat" style="background-image:url('./header.jpg');">
+  <section id="hero-section" class="relative h-[80vh] bg-cover bg-center bg-no-repeat" style="background-image:url('./header.jpg');">
     <div class="absolute inset-0 bg-black/40"></div>
     <div class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
-      <h1 class="hero-title text-4xl md:text-5xl font-extrabold mb-2 leading-tight">كلين دي في خدمتك يومياً</h1>
+      <h1 class="hero-title text-4xl md:text-5xl font-extrabold mb-4 leading-tight">كلين دي في خدمتك يومياً</h1>
 
       <div class="hero-sub-wrap mb-4">
         <p id="heroSubtitle" class="hero-subtitle text-lg md:text-xl">نظافة احترافية بمعايير الشركات الكبرى</p>
@@ -191,12 +231,11 @@
     </div>
   </section>
 
-  <!-- خدمات -->
   <section id="services" class="py-20 bg-silver px-4">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl font-bold text-center mb-10">خدماتنا</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div id="card1" class="service-card relative rounded-xl overflow-hidden h-64 shadow" style="background-image:url('./cleaning1.jpg'); background-size:cover; background-position:center;">
+        <div id="card1" class="service-card relative rounded-xl overflow-hidden h-64 shadow" onclick="openBooking('تنظيف شامل')" style="background-image:url('./cleaning1.jpg'); background-size:cover; background-position:center;">
           <div class="absolute inset-0 bg-black/45 z-10"></div>
           <div class="relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-4">
             <h3 class="text-2xl font-semibold mb-2">تنظيف المنازل بعد البناء</h3>
@@ -208,7 +247,7 @@
           </div>
         </div>
 
-        <div id="card2" class="service-card relative rounded-xl overflow-hidden h-64 shadow" style="background-image:url('./cleaning2.jpg'); background-size:cover; background-position:center;">
+        <div id="card2" class="service-card relative rounded-xl overflow-hidden h-64 shadow" onclick="openBooking('تنظيف شامل')" style="background-image:url('./cleaning2.jpg'); background-size:cover; background-position:center;">
           <div class="absolute inset-0 bg-black/45 z-10"></div>
           <div class="relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-4">
             <h3 class="text-2xl font-semibold mb-2">تنظيف المكاتب</h3>
@@ -220,7 +259,7 @@
           </div>
         </div>
 
-        <div id="card3" class="service-card relative rounded-xl overflow-hidden h-64 shadow" style="background-image:url('./cleaning3.jpg'); background-size:cover; background-position:center;">
+        <div id="card3" class="service-card relative rounded-xl overflow-hidden h-64 shadow" onclick="openBooking('تنظيف أثاث وسجاد')" style="background-image:url('./cleaning3.jpg'); background-size:cover; background-position:center;">
           <div class="absolute inset-0 bg-black/45 z-10"></div>
           <div class="relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-4">
             <h3 class="text-2xl font-semibold mb-2">تنظيف الأثاث والسجاد</h3>
@@ -235,13 +274,11 @@
     </div>
   </section>
 
-  <!-- قسم الأسعار -->
   <section id="pricing" class="py-16 bg-white px-4">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl font-bold text-center mb-6">احسب سعر خدمتك</h2>
       <p class="text-center text-gray-600 mb-8">اختر نوع الخدمة والمساحة للحصول على سعر إرشادي</p>
 
-      <!-- قائمة أسماء الباقات للجوال: صف واحد يناسب شاشة الهاتف -->
       <div class="packages-mobile-list mb-6 md:hidden" id="packagesMobile">
         <button type="button" id="btn-economy" class="px-3 py-2 text-sm font-semibold" onclick="userSelectPackage('card-economy')">اقتصادية</button>
         <button type="button" id="btn-standard" class="px-3 py-2 text-sm font-semibold" onclick="userSelectPackage('card-standard')">متوسطة</button>
@@ -249,7 +286,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- بطاقة 1 (اقتصادية - أبيض) -->
         <div id="card-economy" class="price-card economy mobile-hidden">
           <div class="mb-3"><span class="price-badge">باقة اقتصادية</span></div>
           <p class="text-gray-600 mb-4">مثالية للمساحات الصغيرة أو التنظيف السريع</p>
@@ -270,7 +306,6 @@
           <button class="w-full bg-primary text-white py-2 rounded-md" onclick="openBooking('تنظيف سريع')">احجز هذه الباقة</button>
         </div>
 
-        <!-- بطاقة 2 (متوسطة - أغمق كما طلبت) -->
         <div id="card-standard" class="price-card standard mobile-hidden">
           <div class="mb-3"><span class="price-badge">باقة متوسطة</span></div>
           <p class="text-gray-600 mb-4">مناسبة للمنازل متوسطة الحجم</p>
@@ -291,7 +326,6 @@
           <button class="w-full bg-primary text-white py-2 rounded-md" onclick="openBooking('تنظيف شامل')">احجز هذه الباقة</button>
         </div>
 
-        <!-- بطاقة 3 (متقدمة - سماوي فاتح) -->
         <div id="card-premium" class="price-card premium mobile-hidden">
           <div class="mb-3"><span class="price-badge">باقة متقدمة</span></div>
           <p class="text-gray-100 mb-4">خدمات مخصّصة للمواقع التي تحتاج معدات خاصة</p>
@@ -313,7 +347,6 @@
         </div>
       </div>
 
-      <!-- حاسبة السعر -->
       <div class="bg-silver p-6 rounded-lg">
         <h4 class="text-lg font-semibold mb-3">حاسبة سريعة للسعر</h4>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -339,26 +372,27 @@
     </div>
   </section>
 
-  <!-- مودال الحجز -->
   <div id="bookingModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="bookingTitle" aria-hidden="true">
     <div class="modal-panel" role="document" aria-describedby="bookingDesc">
       <button class="modal-close" id="modalCloseBtn" aria-label="إغلاق">✕</button>
 
-      <h2 id="bookingTitle" class="text-2xl font-bold mb-2 text-center">نموذج الحجز</h2>
-      <p id="bookingDesc" class="text-sm text-gray-600 text-center mb-4">اختر نوع التنظيف وأدخل بياناتك ليصلك عرض عبر واتساب</p>
+      <h2 id="bookingTitle" class="text-center">طلب حجز موعد</h2>
+      <div class="text-center mb-6">
+        <p id="bookingDesc">يرجى تعبئة التفاصيل وسيتم تأكيد الموعد عبر واتساب</p>
+      </div>
 
       <form id="modalBookingForm" class="space-y-4" onsubmit="sendModalToWhatsApp(event)">
         <div>
-          <label class="block mb-2 font-semibold text-gray-700">الاسم</label>
+          <label>الاسم</label>
           <input id="modal_name" name="name" type="text" required />
         </div>
         <div>
-          <label class="block mb-2 font-semibold text-gray-700">رقم الجوال</label>
+          <label>رقم الجوال</label>
           <input id="modal_phone" name="phone" type="tel" required />
         </div>
 
         <div>
-          <label class="block mb-2 font-semibold text-gray-700">نوع التنظيف</label>
+          <label>نوع التنظيف</label>
           <select id="modal_service_type" name="service_type" required class="">
             <option value="">اختر نوع التنظيف</option>
             <option>تنظيف سريع</option>
@@ -369,72 +403,125 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block mb-2 font-semibold text-gray-700">المدينة</label>
+           <div>
+            <label>المدينة</label>
             <select id="modal_city" name="city" required>
               <option value="الرياض">الرياض</option>
             </select>
           </div>
           <div>
-            <label class="block mb-2 font-semibold text-gray-700">الحي</label>
+            <label>الحي</label>
             <select id="modal_district" name="district">
               <option value="">اختر الحي</option>
-              <option>الملز</option><option>النخيل</option><option>العليا</option><option>الشعلة</option><option>الروضة</option>
-              <option>النسيم</option><option>اليرموك</option><option>الصحافة</option><option>السويدي</option><option>الشميسي</option>
-              <option>النهضة</option><option>الربوة</option><option>الرياض الجديدة</option><option>الشفا</option><option>الزهراء</option>
-              <option>الفيصلية</option><option>البديعة</option><option>الملقا</option><option>العقيق</option><option>الحمراء</option>
-              <option>النسيم الغربي</option><option>النسيم الشرقي</option><option>السلي</option><option>الشميسية</option><option>الدرعية</option>
-              <option>الناصرية</option><option>الغدير</option><option>العزيزية</option><option>المرقب</option><option>الوزيرية</option>
-              <option>الخالدية</option><option>النهضة الشمالية</option><option>الجنادرية</option><option>المنطقة المركزية</option><option>السويدي الشمالي</option>
-              <option>المرسلات</option>
-              <!-- أضف أو عدّل القوائم حسب الحاجة -->
+              <optgroup label="شمال الرياض">
+                <option>الملقا</option><option>العقيق</option><option>الصحافة</option><option>النرجس</option><option>الياسمين</option>
+                <option>الفلاح</option><option>الندى</option><option>التعاون</option><option>الربيع</option><option>القرى</option>
+              </optgroup>
+              <optgroup label="شرق الرياض">
+                <option>الرمال</option><option>الجنادرية</option><option>اليرموك</option><option>الريان</option><option>الروضة</option>
+                <option>النهضة</option><option>القدس</option><option>الروابي</option><option>الشهداء</option><option>السلام</option>
+              </optgroup>
+              <optgroup label="غرب الرياض">
+                <option>عرقة</option><option>لبن</option><option>الدرعية</option><option>السفارات</option><option>الخزامى</option>
+                <option>وادي حنيفة</option><option>طويق</option><option>ظهرة لبن</option><option>المعيزلية</option><option>المهدية</option>
+              </optgroup>
+              <optgroup label="جنوب الرياض">
+                <option>الشميسي</option><option>المنصورة</option><option>السويدي</option><option>الشفا</option><option>بدر</option>
+                <option>العزيزية</option><option>الدار البيضاء</option><option>الحاير</option><option>الفيحاء</option><option>الربوة</option>
+              </optgroup>
+              <optgroup label="وسط الرياض">
+                <option>العليا</option><option>السليمانية</option><option>الملز</option><option>الوزارات</option><option>المربع</option>
+                <option>المرقب</option><option>البطحاء</option><option>الفيصلية</option><option>أم الحمام</option><option>الخليج</option>
+              </optgroup>
+              <option value="حي آخر">حي آخر (يرجى التحديد في الملاحظات)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label>تاريخ الخدمة</label>
+            <input id="modal_date_only" name="date_only" type="date" required />
+          </div>
+          <div>
+            <label>الوقت المفضل</label>
+            <select id="modal_time_slot" name="time_slot" required>
+              <option value="">اختر الوقت</option>
+              <option value="09:00 صباحاً">09:00 صباحاً</option>
+              <option value="10:00 صباحاً">10:00 صباحاً</option>
+              <option value="11:00 صباحاً">11:00 صباحاً</option>
+              <option value="12:00 مساءً">12:00 مساءً</option>
+              <option value="01:00 مساءً">01:00 مساءً</option>
+              <option value="02:00 مساءً">02:00 مساءً</option>
+              <option value="03:00 مساءً">03:00 مساءً</option>
+              <option value="04:00 مساءً">04:00 مساءً</option>
+              <option value="05:00 مساءً">05:00 مساءً</option>
+              <option value="06:00 مساءً">06:00 مساءً</option>
+              <option value="07:00 مساءً">07:00 مساءً</option>
+              <option value="08:00 مساءً">08:00 مساءً</option>
+              <option value="09:00 مساءً">09:00 مساءً</option>
+              <option value="10:00 مساءً">10:00 مساءً</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label class="block mb-2 font-semibold text-gray-700">رابط الموقع من خرائط Google (اختياري)</label>
-          <input id="modal_maplink" name="maplink" type="url" placeholder="https://maps.google.com/..." />
+          <label>تفاصيل التنظيف (أثاث، سجاد، عدد غرف..)</label>
+          <textarea id="modal_notes" name="notes" rows="3" placeholder="مثال: غسيل كنب 5 مقاعد، سجاد 3*4، تنظيف غرفة نوم..."></textarea>
         </div>
 
+        <div>
+          <label>رابط الموقع من خرائط Google (اختياري)</label>
+          <input id="modal_maplink" name="maplink" type="url" placeholder="https://maps.google.com/..." />
+        </div>
+        
+        <div>
+          <label>رمز الكوبون (اختياري)</label>
+          <input id="modal_coupon" name="coupon_code" type="text" placeholder="أدخل رمز الكوبون إذا توفر" />
+        </div>
         <input type="hidden" id="selectedPackage" name="package" value="">
 
-        <div class="flex gap-3">
-          <button type="submit" class="flex-1 bg-primary text-white py-3 rounded-full hover:bg-sky-700 transition font-semibold">إرسال الحجز عبر واتساب</button>
-          <button type="button" class="flex-1 bg-gray-200 text-dark py-3 rounded-full hover:bg-gray-300 transition font-semibold" id="modalCancelBtn">إلغاء</button>
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="flex-1 bg-primary text-white py-3 rounded-full hover:bg-sky-700 transition font-semibold shadow-lg transform hover:-translate-y-0.5">إرسال طلب الحجز</button>
+          <button type="button" class="flex-1 bg-gray-100 text-dark py-3 rounded-full hover:bg-gray-200 transition font-semibold" id="modalCancelBtn">إلغاء</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- من نحن -->
   <section id="about" class="py-20 bg-white px-4">
     <div class="max-w-4xl mx-auto text-center">
       <h2 class="text-3xl font-bold mb-6">من نحن</h2>
       <div class="text-lg text-gray-700 space-y-4 leading-relaxed">
         <p>كلين دي شركة تنظيف احترافية تعمل داخل المملكة العربية السعودية لتقديم خدمات تنظيف شاملة بجودة عالية ومعايير أمان صارمة.</p>
         <p>نؤمن أن النظافة تجربة متكاملة تبدأ من التخطيط والتنظيم ثم التنفيذ الدقيق، لذلك نستخدم أدوات متطورة ومواد آمنة لضمان بيئة سليمة لعملائنا.</p>
+        <p><strong>نفتخر بتقديم خدماتنا من خلال طاقم فلبيني ملتزم ومؤهل لتقديم أعلى معايير النظافة</strong></p>
         <p>فريقنا محترف ومدرّب على بروتوكولات النظافة الحديثة وخدمة العملاء، ونحن نتابع الطلب خطوة بخطوة حتى الوصول لرضا العميل التام.</p>
       </div>
     </div>
   </section>
 
-  <!-- تواصل معنا -->
   <section id="contact" class="py-16 bg-silver px-4">
     <div class="max-w-3xl mx-auto text-center text-lg text-gray-700 space-y-3">
       <p>رقم الجوال: <a href="tel:966554778029" class="text-primary hover:underline">966554778029</a></p>
-      <p>البريد الإلكتروني: <a href="mailto:info@cleandy.com" class="text-primary hover:underline">info@cleandy.com</a></p>
+      <p>البريد الإلكتروني: <a href="mailto:info@cleanday.co" class="text-primary hover:underline">info@cleanday.co</a></p>
       <p>الموقع: الرياض، المملكة العربية السعودية</p>
       <p>واتساب: <a href="https://wa.me/966554778029" target="_blank" class="text-green-600 hover:underline">اضغط هنا للتواصل</a></p>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="py-8 text-center text-sm text-gray-500">
     ©️ <span id="year"></span> كلين دي. جميع الحقوق محفوظة.
   </footer>
 
   <script>
+    // ===================================================================================================
+    // ⚠️ الرابط النهائي والمحدث لسكربت جوجل الخاص بك (Web app URL) - تم تحديثه للرابط الأخير
+    // ===================================================================================================
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPdlMASHBCbMsZIm1bGRhBPzU0vBvGyGlXS9B60ymHngxm0vVMcxV9RHftV-1SCFCx/exec'; 
+    // ===================================================================================================
+
+
     // تغيير صور البطاقات تلقائياً
     (function(){
       const images1 = ['./cleaning1.jpg','./cleaning1b.jpg','./cleaning1c.jpg'];
@@ -471,6 +558,13 @@
       } else {
         selectedPackageInput.value = '';
       }
+      
+      const dateInput = document.getElementById('modal_date_only');
+      if(dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+      }
+
       bookingModal.classList.add('show');
       bookingModal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
@@ -500,31 +594,86 @@
       if(e.key === 'Escape' && bookingModal.classList.contains('show')) closeBooking();
     });
 
-    // إرسال بيانات المودال إلى واتساب
+    // ===================================================================================================
+    // دالة الإرسال المُحدثة والأكثر استقراراً (استخدام FormData)
+    // ===================================================================================================
     function sendModalToWhatsApp(e){
-      e.preventDefault();
-      const name = document.getElementById('modal_name').value.trim();
-      const phone = document.getElementById('modal_phone').value.trim();
-      const city = document.getElementById('modal_city').value;
-      const district = document.getElementById('modal_district').value;
-      const maplink = document.getElementById('modal_maplink').value.trim();
-      const pkg = document.getElementById('selectedPackage').value;
-      const serviceType = document.getElementById('modal_service_type').value;
+        e.preventDefault();
+        
+        // 1. جمع البيانات وتحويلها إلى FormData
+        const name = document.getElementById('modal_name').value.trim();
+        const phone = document.getElementById('modal_phone').value.trim();
+        const city = document.getElementById('modal_city').value;
+        const district = document.getElementById('modal_district').value;
+        const maplink = document.getElementById('modal_maplink').value.trim();
+        const coupon_code = document.getElementById('modal_coupon').value.trim(); // قراءة الكوبون
+        const serviceType = document.getElementById('modal_service_type').value;
+        const dateOnly = document.getElementById('modal_date_only').value;
+        const timeSlot = document.getElementById('modal_time_slot').value;
+        const notesVal = document.getElementById('modal_notes').value.trim();
+        const pkg = document.getElementById('selectedPackage').value; 
+        
+        if(!name || !phone || !serviceType || !dateOnly || !timeSlot){
+            alert('الرجاء إكمال جميع البيانات المطلوبة (الاسم، الجوال، الخدمة، التاريخ والوقت)');
+            return;
+        }
 
-      if(!name || !phone || !serviceType){
-        alert('الرجاء إدخال الاسم، رقم الجوال، واختيار نوع التنظيف');
-        return;
-      }
+        const formElement = document.getElementById('modalBookingForm');
+        const postData = new FormData(formElement);
+        postData.append('action', 'book_now');
+        
+        // 2. إرسال البيانات إلى Google Apps Script
+        const submitButton = document.querySelector('button[type="submit"]');
+        submitButton.disabled = true; 
+        submitButton.textContent = 'جاري الإرسال...'; 
 
-      let message = `طلب حجز جديد:%0Aالاسم: ${name}%0Aالجوال: ${phone}%0Aالخدمة: ${serviceType}%0Aالمدينة: ${city}`;
-      if(district) message += `%0Aالحي: ${district}`;
-      if(pkg) message += `%0Aالباقة المختارة: ${pkg}`;
-      if(maplink) message += `%0Aرابط الموقع: ${maplink}`;
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: postData 
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            // إذا فشل الاتصال برابط السكريبت نفسه (404, 500, الخ)
+            throw new Error('فشل الاتصال بخادم الحجز. يرجى مراجعة الرابط والأذونات.');
+        })
+        .then(result => {
+            submitButton.disabled = false;
+            submitButton.textContent = 'إرسال طلب الحجز'; 
 
-      const whatsappNumber = '966554778029';
-      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(decodeURIComponent(message))}`, '_blank');
-
-      closeBooking();
+            if (result.status === 'error') {
+                // عرض رسالة الخطأ القادمة من Apps Script (مثل: موعد محجوز)
+                alert('فشل في تأكيد الحجز: ' + (result.message || 'خطأ داخلي. يرجى مراجعة سجلات Apps Script.'));
+            } else {
+                // 3. إعداد رسالة الواتساب بعد النجاح
+                let message = `✅ تم تسجيل طلب الحجز بنجاح في الجدول!%0A*يرجى تأكيد التفاصيل التالية:*%0Aالاسم: ${name}%0Aالجوال: ${phone}%0Aالخدمة: ${serviceType}%0Aالمدينة: ${city}`;
+                if(district) message += `%0Aالحي: ${district}`;
+                if(pkg) message += `%0Aالباقة المختارة: ${pkg}`;
+                
+                message += `%0Aالتاريخ المطلوب: ${dateOnly}`;
+                message += `%0Aالوقت المطلوب: ${timeSlot}`;
+                
+                if(notesVal) message += `%0Aتفاصيل الطلب/الملاحظات: ${notesVal}`;
+                if(maplink) message += `%0Aرابط الموقع: ${maplink}`;
+                if(coupon_code) message += `%0Aالكوبون المستخدم: ${coupon_code}`;
+                
+                const whatsappNumber = '966554778029';
+                
+                // فتح الواتساب
+                alert('✅ تم تأكيد تسجيل الحجز! سيتم تحويلك إلى واتساب لإكمال التفاصيل.');
+                setTimeout(() => {
+                    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(decodeURIComponent(message))}`, '_blank');
+                    closeBooking();
+                }, 100); 
+            }
+        })
+        .catch(err => {
+            submitButton.disabled = false;
+            submitButton.textContent = 'إرسال طلب الحجز'; 
+            alert('حدث خطأ في الاتصال بالشبكة أو الخادم: ' + err.message + ' (تحقق من إعدادات المتصفح).');
+            console.error(err);
+        });
     }
 
     // حاسبة السعر البسيطة
@@ -541,7 +690,7 @@
       document.getElementById('calcResult').textContent = `السعر التقريبي: ${estimated.toLocaleString()} ر.س ( ${service} - ${area} م² )`;
     }
 
-    // سلوك الهيدر: عند التمرير نجعل الخلفية شفافة وارجع التدرج عندما تعود الى الأعلى
+    // سلوك الهيدر
     (function(){
       const header = document.getElementById('siteHeader');
       const brand = document.querySelector('.brand');
@@ -577,7 +726,7 @@
           const target = document.querySelector(this.getAttribute('href'));
           if(!target) return;
           const headerHeight = document.getElementById('siteHeader').offsetHeight;
-          const top = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+          const top = target.getBoundingClientRect().top + window.pageYOffsets - headerHeight - 12;
           window.scrollTo({ top, behavior:'smooth' });
         }, {passive:false});
       });
@@ -586,7 +735,7 @@
       window.addEventListener('load', onScroll);
     })();
 
-    // --- التنقل الآلي بين تفاصيل الباقات على الجوال مع إيقاف مؤقت 8 ثواني عند التفاعل ---
+    // التنقل الآلي للموبايل
     (function(){
       const mobileIds = ['card-economy','card-standard','card-premium'];
       const btnMap = {
@@ -597,8 +746,8 @@
       let autoIndex = 0;
       let autoTimer = null;
       let pauseUntil = 0;
-      const AUTO_INTERVAL = 2500; // تنقّل كل 2.5 ثانية
-      const PAUSE_MS = 12000; // الآن 8 ثواني انتظار بعد تفاعل المستخدم
+      const AUTO_INTERVAL = 2500; 
+      const PAUSE_MS = 12000; 
 
       function hideAllMobileCards(){
         mobileIds.forEach(id=>{
@@ -631,7 +780,7 @@
 
       function startAutoRotate(){
         stopAutoRotate();
-        rotateStep(); // عرض فوري
+        rotateStep();
         autoTimer = setInterval(rotateStep, AUTO_INTERVAL);
       }
 
@@ -642,16 +791,14 @@
         }
       }
 
-      // استدعاء عند اختيار المستخدم (نقرة على اسم باقة)
       window.userSelectPackage = function(id){
         showCard(id);
-        pauseUntil = Date.now() + PAUSE_MS; // الآن ينتظر 8 ثواني قبل الاستئناف
+        pauseUntil = Date.now() + PAUSE_MS;
         autoIndex = mobileIds.indexOf(id);
         if(autoIndex < 0) autoIndex = 0;
         autoIndex = (autoIndex + 1) % mobileIds.length;
       };
 
-      // إعادة الحالة عند تغيير الحجم
       window.addEventListener('resize', function(){
         if(window.innerWidth > 767){
           mobileIds.forEach(id=>{
@@ -669,7 +816,6 @@
         }
       }, { passive:true });
 
-      // تهيئة عند التحميل
       window.addEventListener('load', function(){
         if(window.innerWidth <= 767){
           hideAllMobileCards();
@@ -682,7 +828,6 @@
         }
       }, { passive:true });
 
-      // إذا نقر المستخدم على البطاقة نفسها نعتبره تفاعل يوقف التبديل 8s
       mobileIds.forEach(id=>{
         const el = document.getElementById(id);
         if(!el) return;
@@ -692,7 +837,7 @@
       });
     })();
 
-    // ضبط روابط الرقم تلقائياً
+    // ضبط روابط الرقم
     (function(){
       const phone = '966554778029';
       const fwh = document.getElementById('floatingWhatsappBtn');
@@ -701,7 +846,7 @@
       document.querySelectorAll('a[href^="tel:"]').forEach(a=> a.setAttribute('href', `tel:${phone}`));
     })();
 
-    // تأثير إغلاق وفتح نص زر الحجز كل 10 ثواني
+    // تأثير نبض زر الحجز
     (function(){
       const btn = document.getElementById('floatingBookingBtn');
       if(!btn) return;
@@ -726,7 +871,7 @@
       el.addEventListener('blur', ()=> el.classList.remove('ring-2','ring-offset-2'), {passive:true});
     });
 
-    // عبارات الهيدر المتغيرة: تمت إضافة 3 عبارات إضافية (المجموع الآن 8)
+    // عبارات الهيدر
     (function(){
       const subtitles = [
         "نظافة احترافية بمعايير الشركات الكبرى",
@@ -736,7 +881,8 @@
         "تنظيف بعد البناء مع معدات خاصة",
         "مواد تنظيف آمنة وصديقة للعائلة",
         "دقة في المواعيد واهتمام بالتفاصيل",
-        "خدمة ما بعد التنفيذ لضمان الرضا"
+        "خدمة ما بعد التنفيذ لضمان الرضا",
+        "فريق فلبيني جاهز لتقديم أفضل تجربة تنظيف لمنزلك أو مكتبك" 
       ];
 
       const el = document.getElementById('heroSubtitle');
