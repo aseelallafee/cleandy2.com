@@ -487,6 +487,9 @@
         </div>
         <input type="hidden" id="selectedPackage" name="package" value="">
 
+        <div id="formStatusMessage" style="display: none;" class="p-3 mb-4 text-sm font-semibold rounded text-center" role="alert">
+        </div>
+
         <div class="flex gap-3 pt-2">
           <button type="submit" class="flex-1 bg-primary text-white py-3 rounded-full hover:bg-sky-700 transition font-semibold shadow-lg transform hover:-translate-y-0.5">إرسال طلب الحجز</button>
           <button type="button" class="flex-1 bg-gray-100 text-dark py-3 rounded-full hover:bg-gray-200 transition font-semibold" id="modalCancelBtn">إلغاء</button>
@@ -527,6 +530,24 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvdkJHJcat8FmrVdV44SLbcDEcAK7kH_nc_z6GOTGTv3k0l2DK8ammNbOtz83RVyrR/exec'; 
     // ===================================================================================================
 
+    // دالة مساعدة لعرض رسائل الحالة (النجاح أو الخطأ) داخل النموذج
+    function showStatus(type, message) {
+        const statusEl = document.getElementById('formStatusMessage');
+        statusEl.style.display = 'block';
+        
+        // إزالة الفئات السابقة
+        statusEl.classList.remove('bg-green-100', 'text-green-700', 'bg-red-100', 'text-red-700');
+        statusEl.style.display = 'block'; // Ensure it's visible
+
+        if (type === 'success') {
+            statusEl.classList.add('bg-green-100', 'text-green-700');
+            statusEl.innerHTML = `<strong>✅ نجاح:</strong> ${message}`;
+        } else {
+            statusEl.classList.add('bg-red-100', 'text-red-700');
+            statusEl.innerHTML = `<strong>❌ خطأ:</strong> ${message}`;
+        }
+    }
+
 
     // تغيير صور البطاقات تلقائياً
     (function(){
@@ -565,6 +586,10 @@
         selectedPackageInput.value = '';
       }
       
+      // إخفاء رسالة الحالة عند فتح النموذج
+      const formStatusMessage = document.getElementById('formStatusMessage');
+      if (formStatusMessage) formStatusMessage.style.display = 'none';
+
       const dateInput = document.getElementById('modal_date_only');
       if(dateInput) {
         const today = new Date().toISOString().split('T')[0];
@@ -601,98 +626,111 @@
     });
 
     // ===================================================================================================
-    // 🛑 دالة الإرسال المُحدثة (تم إضافة التحقق البرمجي وحل مشكلة حظر النوافذ المنبثقة)
+    // 🛠️ دالة الإرسال المستعادة والمُصححة (تحويل مباشر بعد التأكيد من خادم جوجل)
     // ===================================================================================================
     function sendModalToWhatsApp(e){
         e.preventDefault();
         
+        const submitBtn = document.querySelector('#modalBookingForm button[type="submit"]');
+        const formStatusMessage = document.getElementById('formStatusMessage');
+        
+        // إخفاء الرسائل السابقة وإعداد الزر
+        formStatusMessage.style.display = 'none';
+        submitBtn.dataset.originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'جاري الإرسال... الرجاء الانتظار';
+        
+        
         // 1. جمع البيانات والتحقق الإجباري
         const name = document.getElementById('modal_name').value.trim();
         const phone = document.getElementById('modal_phone').value.trim();
-        const cleanPhone = phone.replace(/\D/g,''); // تنظيف الرقم من أي رموز أو مسافات
-        const city = document.getElementById('modal_city').value;
-        const district = document.getElementById('modal_district').value;
-        const maplink = document.getElementById('modal_maplink').value.trim();
-        const coupon_code = document.getElementById('modal_coupon').value.trim(); 
+        const cleanPhone = phone.replace(/\D/g,''); 
         const serviceType = document.getElementById('modal_service_type').value;
         const dateOnly = document.getElementById('modal_date_only').value;
         const timeSlot = document.getElementById('modal_time_slot').value;
+        const district = document.getElementById('modal_district').value;
+        const city = document.getElementById('modal_city').value;
         const notesVal = document.getElementById('modal_notes').value.trim();
+        const maplink = document.getElementById('modal_maplink').value.trim();
+        const coupon_code = document.getElementById('modal_coupon').value.trim(); 
         const pkg = document.getElementById('selectedPackage').value; 
         
-        const phonePattern = /^[5][0-9]{8}$/; // يبدأ بـ 5 ويتبعه 8 أرقام (بإجمالي 9 أرقام)
+        const phonePattern = /^[5][0-9]{8}$/; 
 
-        if(!name || !phone || !serviceType || !dateOnly || !timeSlot || !city){
-            alert('الرجاء إكمال جميع البيانات المطلوبة (الاسم، الجوال، الخدمة، المدينة، التاريخ والوقت).');
-            return;
+        // التحقق من صحة النموذج بناءً على قواعد HTML
+        if (!e.target.checkValidity()) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = submitBtn.dataset.originalText;
+            return; 
         }
 
-        // 🛑 التحقق البرمجي الإضافي لرقم الجوال 
-        if(!phonePattern.test(cleanPhone)){
-             alert('رقم الجوال غير صحيح. يجب أن يبدأ بالرقم 5 وأن يتكون من 9 أرقام (بدون رمز الدولة 966).');
+        // التحقق المتقدم لرقم الجوال (للتأكد من تنسيقه)
+        if (!phonePattern.test(cleanPhone)) {
+             showStatus('error', 'رقم الجوال غير صحيح. يجب أن يبدأ بالرقم 5 وأن يتكون من 9 أرقام (بدون رمز الدولة 966).');
+             submitBtn.disabled = false;
+             submitBtn.textContent = submitBtn.dataset.originalText;
              return;
         }
+        
+        // 2. إعداد رسالة الواتساب
+        let message = `✅ تم تسجيل طلب الحجز بنجاح في الجدول!%0A*يرجى تأكيد التفاصيل التالية:*%0Aالاسم: ${name}%0Aالجوال: ${phone}%0Aالخدمة: ${serviceType}%0Aالمدينة: ${city}`;
+        if(district) message += `%0Aالحي: ${district}`;
+        if(pkg) message += `%0Aالباقة المختارة: ${pkg}`;
+        
+        message += `%0Aالتاريخ المطلوب: ${dateOnly}`;
+        message += `%0Aالوقت المطلوب: ${timeSlot}`;
+        
+        if(notesVal) message += `%0Aتفاصيل الطلب/الملاحظات: ${notesVal}`;
+        if(maplink) message += `%0Aرابط الموقع: ${maplink}`;
+        if(coupon_code) message += `%0Aالكوبون المستخدم: ${coupon_code}`;
+        
+        // 🛑 رقم واتساب خدمة العملاء
+        const whatsappNumber = '966554778029'; 
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(decodeURIComponent(message))}`;
 
         const formElement = document.getElementById('modalBookingForm');
         const postData = new FormData(formElement);
         postData.append('action', 'book_now');
         
-        // 2. إرسال البيانات إلى Google Apps Script
-        const submitButton = document.querySelector('#modalBookingForm button[type="submit"]');
-        submitButton.disabled = true; 
-        submitButton.textContent = 'جاري الإرسال... الرجاء الانتظار'; 
-
+        // 3. الإرسال إلى خادم جوجل
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            body: postData 
+            body: postData,
         })
         .then(response => {
-            if (response.ok) {
-                return response.json();
+            if (!response.ok) {
+                throw new Error('فشل الاتصال بالخادم. تحقق من الرابط والأذونات.');
             }
-            throw new Error('فشل الاتصال بالخادم. تحقق من الرابط والأذونات.');
+            return response.json();
         })
-        .then(result => {
-            submitButton.disabled = false;
-            submitButton.textContent = 'إرسال طلب الحجز'; 
-
-            if (result.status === 'error') {
-                // عرض رسالة الخطأ القادمة من Apps Script
-                alert('فشل في تأكيد الحجز: ' + (result.message || 'خطأ داخلي. يرجى مراجعة سجلات Apps Script.'));
+        .then(data => {
+            
+            if (data.status === 'success') {
+                // ✅ نجاح: عرض رسالة نجاح سريعة ثم الفتح بـ window.open
+                showStatus('success', 'تم تسجيل طلب الحجز بنجاح. جارٍ فتح تطبيق واتساب للتأكيد...');
+                
+                // 🛑 التحويل المباشر إلى واتساب
+                window.location.href = whatsappUrl; 
+                
+                // إغلاق المودال لإنهاء العملية
+                setTimeout(closeBooking, 1000); 
+                
             } else {
-                // 3. إعداد رسالة الواتساب بعد النجاح
-                let message = `✅ تم تسجيل طلب الحجز بنجاح في الجدول!%0A*يرجى تأكيد التفاصيل التالية:*%0Aالاسم: ${name}%0Aالجوال: ${phone}%0Aالخدمة: ${serviceType}%0Aالمدينة: ${city}`;
-                if(district) message += `%0Aالحي: ${district}`;
-                if(pkg) message += `%0Aالباقة المختارة: ${pkg}`;
-                
-                message += `%0Aالتاريخ المطلوب: ${dateOnly}`;
-                message += `%0Aالوقت المطلوب: ${timeSlot}`;
-                
-                if(notesVal) message += `%0Aتفاصيل الطلب/الملاحظات: ${notesVal}`;
-                if(maplink) message += `%0Aرابط الموقع: ${maplink}`;
-                if(coupon_code) message += `%0Aالكوبون المستخدم: ${coupon_code}`;
-                
-                // 🛑 رقم واتساب خدمة العملاء
-                const whatsappNumber = '966554778029'; 
-                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(decodeURIComponent(message))}`;
-                
-                // فتح الواتساب
-                alert('✅ تم تأكيد تسجيل الحجز! سيتم تحويلك الآن إلى واتساب لإكمال التفاصيل.');
-                
-                // 🛑 الحل لمنع حظر النوافذ المنبثقة: التوجيه المباشر في نفس النافذة بعد تأخير بسيط (2 ثانية)
-                setTimeout(() => {
-                    window.location.href = whatsappUrl; 
-                    // closeBooking(); 
-                }, 2000); 
+                // 🛑 فشل: عرض رسالة الخطأ من Google Apps Script (مثل: الموعد محجوز)
+                showStatus('error', data.message || 'فشل في حفظ البيانات. يرجى مراجعة سجلات Apps Script.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = submitBtn.dataset.originalText;
             }
         })
         .catch(err => {
-            submitButton.disabled = false;
-            submitButton.textContent = 'إرسال طلب الحجز'; 
-            alert('حدث خطأ في الاتصال بالشبكة أو الخادم: ' + err.message + ' (تحقق من إعدادات المتصفح).');
-            console.error(err);
+            // خطأ في الشبكة أو الاتصال
+            console.error('Fetch Error:', err);
+            showStatus('error', 'حدث خطأ في الاتصال بالشبكة أو الخادم: ' + err.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = submitBtn.dataset.originalText;
         });
     }
+
 
     // حاسبة السعر البسيطة
     function calculatePrice(){
