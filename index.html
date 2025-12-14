@@ -4,14 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>كلين دي | خدمات تنظيف احترافية</title>
-  
+
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-  
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -61,9 +61,9 @@
     .nav-scroll { display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .nav-scroll::-webkit-scrollbar { display:none; }
 
-    .service-card { 
-        cursor: pointer; 
-        transition: transform .35s ease, box-shadow .35s ease; will-change: transform; 
+    .service-card {
+        cursor: pointer;
+        transition: transform .35s ease, box-shadow .35s ease; will-change: transform;
     }
     .service-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 18px 40px rgba(2,6,23,0.12); }
 
@@ -82,23 +82,28 @@
 
     .header-spacer { height:64px; }
 
+    /* التعديل: مطابقة شفافية المودال مع الهيدر عند التمرير */
     .modal-backdrop {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,0.65); 
+      background: transparent; /* Changed to transparent */
       display: none;
       align-items: center; justify-content: center; z-index: 90; padding: 20px; pointer-events: auto;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(6px); /* Changed to match header.scrolled blur */
     }
-    .modal-backdrop.show { display:flex; }
+    .modal-backdrop.show {
+        display:flex;
+        /* إضافة خلفية شفافة قليلاً لتفادي الشفافية المطلقة مع الخلفية البيضاء */
+        background: rgba(0, 0, 0, 0.2);
+    }
 
     /* المودال بشفافية عالية جداً (25% أبيض) + تمويه قوي */
     .modal-panel {
       width:100%; max-width:720px; border-radius: 16px;
-      background: rgba(255, 255, 255, 0.25); 
+      background: rgba(255, 255, 255, 0.25);
       border: 1px solid rgba(255, 255, 255, 0.35);
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
       padding: 24px; position: relative;
-      backdrop-filter: blur(22px) saturate(160%); 
+      backdrop-filter: blur(22px) saturate(160%);
       -webkit-backdrop-filter: blur(22px) saturate(160%);
       max-height: 90vh;
       overflow-y: auto;
@@ -107,17 +112,17 @@
     @media (max-width:640px){ .modal-panel { padding:18px; border-radius:14px; max-width:94%; } }
 
     /* الخانات: بيضاء بنسبة 80% لتبرز عن الخلفية الزجاجية */
-    .modal-panel input, 
-    .modal-panel select, 
+    .modal-panel input,
+    .modal-panel select,
     .modal-panel textarea {
-      background: rgba(255, 255, 255, 0.80); 
-      color: #0f172a; 
+      background: rgba(255, 255, 255, 0.80);
+      color: #0f172a;
       border: 1px solid rgba(255,255,255,0.4);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       padding: 11px 14px; border-radius: 10px; width: 100%; outline: none;
       font-weight: 600; transition: all 0.2s ease;
     }
-    
+
     .modal-panel input:focus, .modal-panel select:focus, .modal-panel textarea:focus {
         background: #ffffff;
         border-color: var(--primary);
@@ -125,31 +130,31 @@
     }
 
     .modal-panel label {
-      color: #0f172a; 
-      font-weight: 800; 
+      color: #0f172a;
+      font-weight: 800;
       margin-bottom: 6px;
       display: block;
       font-size: 0.95rem;
       text-shadow: none;
     }
-    
-    .modal-panel h2 { 
-        font-weight: 900; font-size: 1.75rem; margin-bottom: 0.5rem; 
+
+    .modal-panel h2 {
+        font-weight: 900; font-size: 1.75rem; margin-bottom: 0.5rem;
         color: #0f172a;
         text-shadow: none;
     }
-    
+
     .modal-panel p#bookingDesc {
       color: #1e293b;
       font-weight: 600;
       text-shadow: none;
     }
 
-    .modal-close { 
-        position: absolute; top:16px; left:16px; 
-        background: rgba(255,255,255,0.7); border-radius: 50%; width: 36px; height: 36px; 
+    .modal-close {
+        position: absolute; top:16px; left:16px;
+        background: rgba(255,255,255,0.7); border-radius: 50%; width: 36px; height: 36px;
         display:flex; align-items:center; justify-content:center;
-        border:none; cursor:pointer; font-size:18px; color:#334155; 
+        border:none; cursor:pointer; font-size:18px; color:#334155;
         transition: all 0.2s;
     }
     .modal-close:hover { background: #ffffff; color: #000; }
@@ -195,6 +200,68 @@
 
     .floating-booking .booking-text { display:inline-block; transform-origin:center; transition: transform .35s ease, opacity .25s ease; }
     .floating-booking.closed .booking-text { transform: scaleX(0); opacity:0; }
+
+    /* ========================================================= */
+    /* قواعد CSS الجديدة لـ "لماذا كلين دي؟" (تعديل طلب المستخدم) */
+    /* ========================================================= */
+    .why-card-main {
+      transition: opacity 0.4s ease;
+      opacity: 1;
+      border: 1px solid rgba(2,6,23,0.08); /* حدود خفيفة على خلفية فاتحة */
+      will-change: opacity;
+    }
+    .why-card-main.fade-out {
+      opacity: 0;
+    }
+
+    /* تصميم البطاقات المصغرة للتبديل */
+    .why-mini-card {
+      padding: 12px 6px;
+      border-radius: 10px;
+      background: #fff; /* خلفية بيضاء */
+      color: var(--dark);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: 2px solid transparent;
+      box-shadow: 0 4px 15px rgba(2,6,23,0.05);
+      position: relative;
+    }
+    .why-mini-card:hover {
+        transform: translateY(-2px);
+        background: #fcfcfc;
+    }
+    /* جعل الحدود باللون الأساسي لبطاقة التبديل النشطة */
+    .why-mini-card.active-mini {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(14,165,233,0.15);
+      background: #fff;
+    }
+    .why-mini-card h4 {
+        color: var(--dark);
+    }
+    .why-mini-card .mini-icon {
+      background: var(--primary);
+    }
+    .why-mini-card.active-mini .mini-icon {
+      background: var(--sky-dark);
+    }
+
+    /* لضمان التخطيط على الجوال */
+    #whySwitchingList {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+    @media (max-width: 767px) {
+        #whySwitchingList {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        /* إزالة قواعد الجوال المعقدة التي لم تعد مستخدمة للبطاقات المصغرة */
+    }
+
+    /* إزالة قواعد why-card القديمة التي لم تعد مستخدمة */
+    /* .why-card لم تعد مستخدمة */
+
   </style>
 </head>
 <body>
@@ -218,6 +285,7 @@
       <nav class="nav-scroll" aria-label="رابط الأقسام">
         <a href="#services" class="nav-pill nav-link" data-target="services">الخدمات</a>
         <a href="#pricing" class="nav-pill nav-link" data-target="pricing">الأسعار</a>
+        <a href="#why-choose-us" class="nav-pill nav-link" data-target="why-choose-us">مميزاتنا</a>
         <a href="#about" class="nav-pill nav-link" data-target="about">من نحن</a>
         <a href="#contact" class="nav-pill nav-link" data-target="contact">تواصل معنا</a>
       </nav>
@@ -380,6 +448,41 @@
     </div>
   </section>
 
+  <section id="why-choose-us" class="py-20 bg-silver px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12">لماذا كلين دي؟</h2>
+
+      <div id="activeWhyCardContainer" class="bg-white rounded-lg shadow-2xl p-6 md:p-8 mb-6 relative min-h-[250px] why-card-main text-dark text-right">
+          </div>
+
+      <div id="whySwitchingList" class="grid grid-cols-4 gap-4 md:gap-6 text-center pt-4">
+          </div>
+
+    </div>
+  </section>
+
+  <section id="about" class="py-20 bg-white px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-6">من نحن</h2>
+      <div class="text-lg text-gray-700 space-y-4 leading-relaxed">
+        <p>كلين دي شركة تنظيف احترافية تعمل داخل المملكة العربية السعودية لتقديم خدمات تنظيف شاملة بجودة عالية ومعايير أمان صارمة.</p>
+        <p>نؤمن أن النظافة تجربة متكاملة تبدأ من التخطيط والتنظيم ثم التنفيذ الدقيق، لذلك نستخدم أدوات متطورة ومواد آمنة لضمان بيئة سليمة لعملائنا.</p>
+        <p><strong>نفتخر بتقديم خدماتنا من خلال طاقم فلبيني ملتزم ومؤهل لتقديم أعلى معايير النظافة</strong></p>
+        <p>فريقنا محترف ومدرّب على بروتوكولات النظافة الحديثة وخدمة العملاء، ونحن نتابع الطلب خطوة بخطوة حتى الوصول لرضا العميل التام.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="py-16 bg-silver px-4">
+    <div class="max-w-3xl mx-auto text-center text-lg text-gray-700 space-y-3">
+      <p>رقم الجوال: <a href="tel:966503700676" class="text-primary hover:underline">966503700676</a></p>
+      <p>البريد الإلكتروني: <a href="mailto:info@cleanday.co" class="text-primary hover:underline">info@cleanday.co</a></p>
+      <p>الموقع: الرياض، المملكة العربية السعودية</p>
+      <p>واتساب: <a href="https://wa.me/966503700676" target="_blank" class="text-green-600 hover:underline">اضغط هنا للتواصل</a></p>
+    </div>
+  </section>
+
+
   <div id="bookingModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="bookingTitle" aria-hidden="true">
     <div class="modal-panel" role="document" aria-describedby="bookingDesc">
       <button class="modal-close" id="modalCloseBtn" aria-label="إغلاق">✕</button>
@@ -394,11 +497,11 @@
           <label>الاسم</label>
           <input id="modal_name" name="name" type="text" required />
         </div>
-        
+
         <div>
           <label>رقم الجوال</label>
-          <input id="modal_phone" name="phone" type="tel" required 
-            pattern="05[0-9]{8}" 
+          <input id="modal_phone" name="phone" type="tel" required
+            pattern="05[0-9]{8}"
             maxlength="10"
             placeholder="05xxxxxxxx"
             title="يجب أن يبدأ الرقم بـ 05 وأن يتكون من 10 أرقام"
@@ -488,7 +591,7 @@
           <label>رابط الموقع من خرائط Google (اختياري)</label>
           <input id="modal_maplink" name="maplink" type="url" placeholder="https://maps.google.com/..." />
         </div>
-        
+
         <div>
           <label>رمز الكوبون (اختياري)</label>
           <input id="modal_coupon" name="coupon_code" type="text" placeholder="أدخل رمز الكوبون إذا توفر" />
@@ -506,26 +609,6 @@
     </div>
   </div>
 
-  <section id="about" class="py-20 bg-white px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl font-bold mb-6">من نحن</h2>
-      <div class="text-lg text-gray-700 space-y-4 leading-relaxed">
-        <p>كلين دي شركة تنظيف احترافية تعمل داخل المملكة العربية السعودية لتقديم خدمات تنظيف شاملة بجودة عالية ومعايير أمان صارمة.</p>
-        <p>نؤمن أن النظافة تجربة متكاملة تبدأ من التخطيط والتنظيم ثم التنفيذ الدقيق، لذلك نستخدم أدوات متطورة ومواد آمنة لضمان بيئة سليمة لعملائنا.</p>
-        <p><strong>نفتخر بتقديم خدماتنا من خلال طاقم فلبيني ملتزم ومؤهل لتقديم أعلى معايير النظافة</strong></p>
-        <p>فريقنا محترف ومدرّب على بروتوكولات النظافة الحديثة وخدمة العملاء، ونحن نتابع الطلب خطوة بخطوة حتى الوصول لرضا العميل التام.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="py-16 bg-silver px-4">
-    <div class="max-w-3xl mx-auto text-center text-lg text-gray-700 space-y-3">
-      <p>رقم الجوال: <a href="tel:966503700676" class="text-primary hover:underline">966503700676</a></p>
-      <p>البريد الإلكتروني: <a href="mailto:info@cleanday.co" class="text-primary hover:underline">info@cleanday.co</a></p>
-      <p>الموقع: الرياض، المملكة العربية السعودية</p>
-      <p>واتساب: <a href="https://wa.me/966503700676" target="_blank" class="text-green-600 hover:underline">اضغط هنا للتواصل</a></p>
-    </div>
-  </section>
 
   <footer class="py-8 text-center text-sm text-gray-500">
     ©️ <span id="year"></span> كلين دي. جميع الحقوق محفوظة.
@@ -535,19 +618,19 @@
     // ===================================================================================================
     // 🛑 الرابط النهائي والمُحدث لسكربت جوجل الخاص بك (Web app URL)
     // ===================================================================================================
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQJKfb8BP_mcjaz68WOjfVJkbutshQfPN6OnoPU8mo3m9DzCfL50QV5AOjs4Ek7oE0/exec'; 
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzt5jyJIKUFfV2KssT0YGYbAyq741vLO9XqFsXwGgLYSjEgwk8SwXsV4f8AC2i3BVcA/exec';
     // ===================================================================================================
-    // ⚠️ ملاحظة بخصوص مشكلة إرسال الإيميل (GAS):
-    // هذا الجزء من الكود (JavaScript) يعمل بشكل سليم لإرسال البيانات إلى رابط سكريبت جوجل أعلاه.
-    // مشكلة عدم وصول الإيميل تكون غالباً في كود Google Apps Script نفسه (الذي يعمل على سيرفر جوجل).
-    // * يجب التأكد من أن دالة doPost() في كود GAS تحتوي على سطر MailApp.sendEmail() أو SpreadsheetApp.openById() وأن النشر يتم بأذونات "Execute as: Me" و "Who has access to the app: Anyone".
-    // ===================================================================================================
+
+    // التعديل: إضافة دالة scrollToTop
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     // دالة مساعدة لعرض رسائل الحالة (النجاح أو الخطأ) داخل النموذج
     function showStatus(type, message) {
         const statusEl = document.getElementById('formStatusMessage');
         statusEl.style.display = 'block';
-        
+
         // إزالة الفئات السابقة
         statusEl.classList.remove('bg-green-100', 'text-green-700', 'bg-red-100', 'text-red-700');
         statusEl.style.display = 'block'; // Ensure it's visible
@@ -598,7 +681,7 @@
       } else {
         selectedPackageInput.value = '';
       }
-      
+
       // إخفاء رسالة الحالة عند فتح النموذج
       const formStatusMessage = document.getElementById('formStatusMessage');
       if (formStatusMessage) formStatusMessage.style.display = 'none';
@@ -643,21 +726,21 @@
     // ===================================================================================================
     function sendModalToWhatsApp(e){
         e.preventDefault();
-        
+
         const submitBtn = document.querySelector('#modalBookingForm button[type="submit"]');
         const formStatusMessage = document.getElementById('formStatusMessage');
-        
+
         // إخفاء الرسائل السابقة وإعداد الزر
         formStatusMessage.style.display = 'none';
         submitBtn.dataset.originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = 'جاري الإرسال... الرجاء الانتظار';
-        
-        
+
+
         // 1. جمع البيانات والتحقق الإجباري
         const name = document.getElementById('modal_name').value.trim();
         const phone = document.getElementById('modal_phone').value.trim();
-        const cleanPhone = phone.replace(/\D/g,''); 
+        const cleanPhone = phone.replace(/\D/g,'');
         const serviceType = document.getElementById('modal_service_type').value;
         const dateOnly = document.getElementById('modal_date_only').value;
         const timeSlot = document.getElementById('modal_time_slot').value;
@@ -665,17 +748,17 @@
         const city = document.getElementById('modal_city').value;
         const notesVal = document.getElementById('modal_notes').value.trim();
         const maplink = document.getElementById('modal_maplink').value.trim();
-        const coupon_code = document.getElementById('modal_coupon').value.trim(); 
-        const pkg = document.getElementById('selectedPackage').value; 
-        
+        const coupon_code = document.getElementById('modal_coupon').value.trim();
+        const pkg = document.getElementById('selectedPackage').value;
+
         // 🛑 التعبير النمطي الجديد: يبدأ بـ 05 ويتكون من 10 أرقام
-        const phonePattern = /^05[0-9]{8}$/; 
+        const phonePattern = /^05[0-9]{8}$/;
 
         // التحقق من صحة النموذج بناءً على قواعد HTML
         if (!e.target.checkValidity()) {
             submitBtn.disabled = false;
             submitBtn.textContent = submitBtn.dataset.originalText;
-            return; 
+            return;
         }
 
         // التحقق المتقدم لرقم الجوال (للتأكد من تنسيقه)
@@ -685,27 +768,27 @@
              submitBtn.textContent = submitBtn.dataset.originalText;
              return;
         }
-        
+
         // 2. إعداد رسالة الواتساب
         let message = `✅ تم تسجيل طلب الحجز بنجاح في الجدول!%0A*يرجى تأكيد التفاصيل التالية:*%0Aالاسم: ${name}%0Aالجوال: 966${cleanPhone.substring(1)}%0Aالخدمة: ${serviceType}%0Aالمدينة: ${city}`;
         if(district) message += `%0Aالحي: ${district}`;
         if(pkg) message += `%0Aالباقة المختارة: ${pkg}`;
-        
+
         message += `%0Aالتاريخ المطلوب: ${dateOnly}`;
         message += `%0Aالوقت المطلوب: ${timeSlot}`;
-        
+
         if(notesVal) message += `%0Aتفاصيل الطلب/الملاحظات: ${notesVal}`;
         if(maplink) message += `%0Aرابط الموقع: ${maplink}`;
         if(coupon_code) message += `%0Aالكوبون المستخدم: ${coupon_code}`;
-        
+
         // 🛑 رقم واتساب خدمة العملاء (المُعدَّل)
-        const whatsappNumber = '966503700676'; 
+        const whatsappNumber = '966503700676';
         const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(decodeURIComponent(message))}`;
 
         const formElement = document.getElementById('modalBookingForm');
         const postData = new FormData(formElement);
         postData.append('action', 'book_now');
-        
+
         // 3. الإرسال إلى خادم جوجل
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
@@ -718,17 +801,17 @@
             return response.json();
         })
         .then(data => {
-            
+
             if (data.status === 'success') {
                 // ✅ نجاح: عرض رسالة نجاح سريعة ثم الفتح بـ window.open
                 showStatus('success', 'تم تسجيل طلب الحجز بنجاح. جارٍ فتح تطبيق واتساب للتأكيد...');
-                
+
                 // 🛑 التحويل المباشر إلى واتساب
-                window.location.href = whatsappUrl; 
-                
+                window.location.href = whatsappUrl;
+
                 // إغلاق المودال لإنهاء العملية
-                setTimeout(closeBooking, 1000); 
-                
+                setTimeout(closeBooking, 1000);
+
             } else {
                 // 🛑 فشل: عرض رسالة الخطأ من Google Apps Script (مثل: الموعد محجوز)
                 showStatus('error', data.message || 'فشل في حفظ البيانات. يرجى مراجعة سجلات Apps Script.');
@@ -752,12 +835,12 @@
       const area = parseFloat(document.getElementById('calc_area').value) || 0;
       let basePerM2 = 0;
 
-      if(service === 'تنظيف سريع') basePerM2 = 2.4;
-      else if(service === 'تنظيف شامل') basePerM2 = 5.5;
-      else if(service === 'تنظيف بعد البناء') basePerM2 = 8.0;
+      if(service === 'تنظيف سريع') basePerM2 = 5.4;
+      else if(service === 'تنظيف شامل') basePerM2 = 9.5;
+      else if(service === 'تنظيف بعد البناء') basePerM2 = 15.0;
 
       // تغيير الحد الأدنى للسعر إلى 140 ريال
-      let estimated = Math.max(Math.round(basePerM2 * area), 140); 
+      let estimated = Math.max(Math.round(basePerM2 * area), 140);
       document.getElementById('calcResult').textContent = `السعر التقريبي: ${estimated.toLocaleString()} ر.س ( ${service} - ${area} م² )`;
     }
 
@@ -766,7 +849,7 @@
       const header = document.getElementById('siteHeader');
       const brand = document.querySelector('.brand');
       const navLinks = Array.from(document.querySelectorAll('.nav-link'));
-      const sections = ['services','pricing','about','contact'].map(id=>document.getElementById(id)).filter(Boolean);
+      const sections = ['services','pricing','why-choose-us','about','contact'].map(id=>document.getElementById(id)).filter(Boolean); // 🛑 تحديث: ترتيب الأقسام
 
       function onScroll(){
         if(window.scrollY > 20) {
@@ -817,8 +900,8 @@
       let autoIndex = 0;
       let autoTimer = null;
       let pauseUntil = 0;
-      const AUTO_INTERVAL = 2500; 
-      const PAUSE_MS = 12000; 
+      const AUTO_INTERVAL = 2500;
+      const PAUSE_MS = 12000;
 
       function hideAllMobileCards(){
         mobileIds.forEach(id=>{
@@ -953,7 +1036,7 @@
         "مواد تنظيف آمنة وصديقة للعائلة",
         "دقة في المواعيد واهتمام بالتفاصيل",
         "خدمة ما بعد التنفيذ لضمان الرضا",
-        "فريق فلبيني جاهز لتقديم أفضل تجربة تنظيف لمنزلك أو مكتبك" 
+        "فريق فلبيني جاهز لتقديم أفضل تجربة تنظيف لمنزلك أو مكتبك"
       ];
 
       const el = document.getElementById('heroSubtitle');
@@ -988,6 +1071,120 @@
         if(document.hidden) clearInterval(rot);
         else rot = setInterval(showNext, intervalMs);
       }, {passive:true});
+    })();
+
+    // ===================================================================================================
+    // 💡 التعديل الجديد: عرض بطاقة نشطة والتبديل بينها وبين بطاقات مصغرة
+    // ===================================================================================================
+    (function() {
+        const activeContainer = document.getElementById('activeWhyCardContainer');
+        const switchingList = document.getElementById('whySwitchingList');
+        if (!activeContainer || !switchingList) return;
+
+        // البيانات الخاصة بالبطاقات (تم تبسيطها لاستخدام رموز تعبيرية بدلاً من صور assets)
+        const data = [
+          { icon: '🧑‍🤝‍🧑', title: 'طاقم متخصص', desc: 'فريق فلبيني مُدرّب ومؤهل لتقديم أعلى معايير النظافة والخدمة. نؤمن أن النظافة تجربة متكاملة.' },
+          { icon: '🛡️', title: 'جودة وأمان', desc: 'نستخدم مواد آمنة وصديقة للبيئة لضمان بيئة سليمة لعائلتك. نلتزم بأعلى معايير السلامة والجودة.' },
+          { icon: '🕒', title: 'دقة بالمواعيد', desc: 'نلتزم بالوقت المحدد ونتابع طلبك خطوة بخطوة حتى الرضا التام. لنتائج تُلبي توقعاتك دائماً.' },
+          { icon: '🛠️', title: 'معدات متطورة', desc: 'استخدام أحدث الأدوات والتقنيات للتنظيف العميق والفعّال في جميع أنواع المواقع.' }
+        ];
+
+        let currentIndex = 0;
+        const INTERVAL = 3000; // 3 ثواني للتبديل التلقائي
+        const FADE_DURATION = 400; // مدة التلاشي بالمللي ثانية
+        let rotationTimer = null;
+
+        // دالة لعرض محتوى البطاقة النشطة (الكبيرة)
+        function renderActiveCard(item) {
+            activeContainer.innerHTML = `
+                <div class="flex items-center justify-center md:justify-start gap-4 mb-4">
+                  <div class="text-primary mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-primary/10 flex-shrink-0">
+                      <span style="font-size: 32px;">${item.icon}</span>
+                  </div>
+                  <h3 class="text-2xl md:text-3xl font-extrabold text-dark">${item.title}</h3>
+                </div>
+                <p class="text-lg text-gray-700 leading-relaxed">${item.desc}</p>
+            `;
+        }
+
+        // دالة لعرض البطاقات المصغرة للتبديل
+        function buildSwitchingList() {
+            switchingList.innerHTML = '';
+            data.forEach((item, index) => {
+                const miniCard = document.createElement('div');
+                miniCard.className = 'why-mini-card';
+                miniCard.setAttribute('data-index', index);
+                miniCard.onclick = () => {
+                    clearInterval(rotationTimer); // إيقاف التدوير عند النقر اليدوي
+                    setActiveCard(index);
+                    startAutoRotate(); // استئناف التدوير بعد فترة
+                };
+
+                miniCard.innerHTML = `
+                    <div class="mini-icon text-white mb-1 mx-auto w-10 h-10 flex items-center justify-center rounded-full bg-primary transition-colors">
+                        <span style="font-size: 20px;">${item.icon}</span>
+                    </div>
+                    <h4 class="text-sm font-bold whitespace-nowrap overflow-hidden text-ellipsis">${item.title}</h4>
+                `;
+                switchingList.appendChild(miniCard);
+            });
+        }
+
+        // دالة لضبط البطاقة النشطة (سواء تلقائياً أو يدوياً)
+        function setActiveCard(index) {
+            // 1. تطبيق تأثير التلاشي على البطاقة الكبيرة
+            activeContainer.classList.add('fade-out');
+
+            setTimeout(() => {
+                // 2. تحديث المحتوى
+                currentIndex = index;
+                renderActiveCard(data[currentIndex]);
+
+                // 3. إنهاء تأثير التلاشي
+                activeContainer.classList.remove('fade-out');
+
+                // 4. تحديث حالة البطاقات المصغرة
+                const miniCards = switchingList.querySelectorAll('.why-mini-card');
+                miniCards.forEach((card, i) => {
+                    if (i === currentIndex) {
+                        card.classList.add('active-mini');
+                    } else {
+                        card.classList.remove('active-mini');
+                    }
+                });
+
+            }, FADE_DURATION); // انتظر حتى يكتمل التلاشي
+        }
+
+        // التدوير التلقائي
+        function rotateStep() {
+            let nextIndex = (currentIndex + 1) % data.length;
+            setActiveCard(nextIndex);
+        }
+
+        function startAutoRotate() {
+          stopAutoRotate();
+          rotationTimer = setInterval(rotateStep, INTERVAL);
+        }
+
+        function stopAutoRotate() {
+          if (rotationTimer) {
+            clearInterval(rotationTimer);
+            rotationTimer = null;
+          }
+        }
+
+        // 5. التشغيل عند التحميل
+        buildSwitchingList();
+        setActiveCard(0); // عرض البطاقة الأولى عند التحميل
+        startAutoRotate();
+
+        // إيقاف التشغيل التلقائي عند الخروج من التبويب أو الصفحة
+        document.addEventListener('visibilitychange', function(){
+            if(document.hidden) stopAutoRotate();
+            else startAutoRotate();
+        });
+
     })();
   </script>
 
