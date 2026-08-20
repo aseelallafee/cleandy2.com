@@ -262,6 +262,43 @@
     /* إزالة قواعد why-card القديمة التي لم تعد مستخدمة */
     /* .why-card لم تعد مستخدمة */
 
+    /* ========================================================= */
+    /* العروض الديناميكية — تدار بالكامل من لوحة التحكم */
+    /* ========================================================= */
+    #heroOffersContainer, #offers { display:none; }
+    #heroOffersContainer.has-offers, #offers.has-offers { display:block; }
+    .hero-offer-wrap { padding: 24px 16px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+    .hero-offer { position:relative; max-width:1152px; min-height:185px; margin:0 auto; overflow:hidden; border-radius:18px; background:#075985; box-shadow:0 18px 45px rgba(3,105,161,.2); }
+    .hero-offer-image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+    .hero-offer-overlay { position:absolute; inset:0; background:linear-gradient(90deg,rgba(2,6,23,.82) 0%,rgba(2,6,23,.5) 48%,rgba(2,6,23,.08) 100%); }
+    .hero-offer-content { position:relative; z-index:1; display:flex; min-height:185px; flex-direction:column; align-items:flex-start; justify-content:center; max-width:580px; padding:28px 34px; color:#fff; text-align:right; }
+    .hero-offer-badge, .public-offer-badge { display:inline-block; margin-bottom:9px; padding:4px 10px; border-radius:999px; color:#075985; background:#fff; font-size:.78rem; font-weight:800; }
+    .hero-offer-title { margin:0; font-size:clamp(1.35rem,3vw,2rem); font-weight:900; line-height:1.4; }
+    .hero-offer-subtitle { margin:7px 0 16px; color:rgba(255,255,255,.93); font-size:.95rem; line-height:1.85; }
+    .hero-offer-button, .public-offer-button { border:0; border-radius:999px; padding:10px 17px; color:#075985; background:#fff; box-shadow:0 8px 20px rgba(2,6,23,.18); font-family:inherit; font-size:.88rem; font-weight:900; transition:transform .16s,background .16s; }
+    .hero-offer-button:hover, .public-offer-button:hover { transform:translateY(-2px); background:#e0f2fe; }
+    .public-offers-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+    .public-offer-card { overflow:hidden; border:1px solid rgba(14,165,233,.13); border-radius:18px; background:#fff; box-shadow:0 12px 32px rgba(15,23,42,.07); transition:transform .22s,box-shadow .22s; }
+    .public-offer-card:hover { transform:translateY(-6px); box-shadow:0 20px 40px rgba(3,105,161,.14); }
+    .public-offer-image-wrap { position:relative; height:205px; overflow:hidden; background:linear-gradient(135deg,#036b9a,#38bdf8); }
+    .public-offer-image-wrap img { width:100%; height:100%; display:block; object-fit:cover; transition:transform .35s ease; }
+    .public-offer-card:hover .public-offer-image-wrap img { transform:scale(1.05); }
+    .public-offer-image-wrap::after { position:absolute; inset:0; content:""; background:linear-gradient(180deg,transparent 35%,rgba(2,6,23,.48)); pointer-events:none; }
+    .public-offer-badge { position:absolute; z-index:1; top:13px; right:13px; }
+    .public-offer-body { padding:18px; text-align:right; }
+    .public-offer-title { margin:0 0 7px; color:#0f172a; font-size:1.2rem; font-weight:900; line-height:1.5; }
+    .public-offer-description { min-height:50px; margin:0 0 15px; color:#475569; font-size:.87rem; line-height:1.85; }
+    .public-offer-button { color:#fff; background:#0ea5e9; box-shadow:none; }
+    .public-offer-button:hover { color:#fff; background:#036b9a; }
+    @media(max-width:767px){
+      .hero-offer-wrap { padding:16px 12px; }
+      .hero-offer, .hero-offer-content { min-height:210px; }
+      .hero-offer-content { padding:22px; }
+      .hero-offer-overlay { background:linear-gradient(90deg,rgba(2,6,23,.84),rgba(2,6,23,.36)); }
+      .public-offers-grid { grid-template-columns:1fr; gap:14px; }
+      .public-offer-image-wrap { height:190px; }
+    }
+
   </style>
 </head>
 <body>
@@ -270,7 +307,7 @@
     <span class="booking-text">الحجز</span>
   </button>
 
-  <a href="https://wa.me/966920018591" target="_blank" aria-label="واتساب" class="floating-btn floating-whatsapp" id="floatingWhatsappBtn">
+  <a href="https://wa.me/966503700676" target="_blank" aria-label="واتساب" class="floating-btn floating-whatsapp" id="floatingWhatsappBtn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" style="width:20px;height:20px;">
       <path d="M16 0C7.164 0 0 6.832 0 15.264c0 2.688.736 5.2 2.016 7.44L0 32l9.472-2.496c1.92.528 3.936.8 6.048.8 8.832 0 16-6.832 16-15.264S24.832 0 16 0z"/>
     </svg>
@@ -285,6 +322,7 @@
       <nav class="nav-scroll" aria-label="رابط الأقسام">
         <a href="#services" class="nav-pill nav-link" data-target="services">الخدمات</a>
         <a href="#pricing" class="nav-pill nav-link" data-target="pricing">الأسعار</a>
+        <a href="#offers" class="nav-pill nav-link" data-target="offers">العروض</a>
         <a href="#why-choose-us" class="nav-pill nav-link" data-target="why-choose-us">مميزاتنا</a>
         <a href="#about" class="nav-pill nav-link" data-target="about">من نحن</a>
         <a href="#contact" class="nav-pill nav-link" data-target="contact">تواصل معنا</a>
@@ -304,6 +342,17 @@
       </div>
 
       <button id="heroBookingBtn" class="px-6 py-3 bg-white text-primary font-bold rounded-full hover:bg-slate-100 transition">احجز الآن</button>
+    </div>
+  </section>
+
+  <section id="heroOffersContainer" class="hero-offer-wrap" aria-label="عرض مميز">
+    <div id="heroOffersArea"></div>
+  </section>
+
+  <section id="offers" class="py-20 bg-white px-4" aria-labelledby="offersTitle">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-10"><span class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-sm font-bold mb-3">فرص مميزة</span><h2 id="offersTitle" class="text-3xl font-bold mb-3">عروض كلين دي</h2><p class="text-gray-600">اختر العرض المناسب لك واحجزه مباشرة.</p></div>
+      <div id="publicOffersArea" class="public-offers-grid"></div>
     </div>
   </section>
 
@@ -476,10 +525,9 @@
   <section id="contact" class="py-16 bg-silver px-4">
     <div class="max-w-3xl mx-auto text-center text-lg text-gray-700 space-y-3">
       <p>رقم الجوال: <a href="tel:966503700676" class="text-primary hover:underline">966503700676</a></p>
-      <p>الرقم الموحد: <a href="tel:966920018591" class="text-primary hover:underline">966920018591</a></p>
       <p>البريد الإلكتروني: <a href="mailto:info@cleanday.sa" class="text-primary hover:underline">info@cleanday.sa</a></p>
       <p>الموقع: الرياض، المملكة العربية السعودية</p>
-      <p>واتساب: <a href="https://wa.me/966920018591" target="_blank" class="text-green-600 hover:underline">اضغط هنا للتواصل</a></p>
+      <p>واتساب: <a href="https://wa.me/966503700676" target="_blank" class="text-green-600 hover:underline">اضغط هنا للتواصل</a></p>
     </div>
   </section>
 
@@ -633,8 +681,77 @@
     // ===================================================================================================
     // 🛑 الرابط النهائي والمُحدث لسكربت جوجل الخاص بك (Web app URL)
     // ===================================================================================================
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzASEM9j7yjvG7BcTj_v2UfzJmqX63OQ4BNWBZcgIzgVxdt67H0Q-SrJ9_rG3aEkqOrvQ/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlWUc_WKbIo8AsHlHswk9i-Yfvw7G-ge2idJTrkXgPBR911jCZyNV2oqL6uDKoMmPi/exec';
     // ===================================================================================================
+
+
+
+    // ===================================================================================================
+    // العروض العامة: تجلب فقط العروض النشطة وفي فترة ظهورها المحددة من لوحة التحكم.
+    // ===================================================================================================
+    function escapeOfferHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, function(char) {
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[char];
+      });
+    }
+
+    function createOfferButton(offer) {
+      const button = document.createElement('button');
+      button.className = 'public-offer-button';
+      button.type = 'button';
+      button.textContent = offer.cta_text || 'احجز العرض الآن';
+      button.addEventListener('click', function() { openBooking(offer.cta_service || 'تنظيف شامل'); });
+      return button;
+    }
+
+    function renderHeroOffer(offers) {
+      const container = document.getElementById('heroOffersContainer');
+      const area = document.getElementById('heroOffersArea');
+      const offer = offers && offers[0];
+      if (!offer) { container.classList.remove('has-offers'); area.innerHTML = ''; return; }
+      const image = offer.image_url ? '<img class="hero-offer-image" src="' + escapeOfferHtml(offer.image_url) + '" alt="' + escapeOfferHtml(offer.title) + '">' : '';
+      const badge = offer.badge ? '<span class="hero-offer-badge">' + escapeOfferHtml(offer.badge) + '</span>' : '';
+      area.innerHTML = '<article class="hero-offer">' + image + '<div class="hero-offer-overlay"></div><div class="hero-offer-content">' + badge + '<h2 class="hero-offer-title">' + escapeOfferHtml(offer.title) + '</h2><p class="hero-offer-subtitle">' + escapeOfferHtml(offer.subtitle || '') + '</p></div></article>';
+      var content = area.querySelector('.hero-offer-content');
+      content.appendChild(createOfferButton(offer));
+      container.classList.add('has-offers');
+    }
+
+    function renderOffersSection(offers) {
+      const section = document.getElementById('offers');
+      const area = document.getElementById('publicOffersArea');
+      if (!offers || !offers.length) { section.classList.remove('has-offers'); area.innerHTML = ''; return; }
+      area.innerHTML = offers.map(function(offer) {
+        const image = offer.image_url ? '<img src="' + escapeOfferHtml(offer.image_url) + '" alt="' + escapeOfferHtml(offer.title) + '" loading="lazy">' : '';
+        const badge = offer.badge ? '<span class="public-offer-badge">' + escapeOfferHtml(offer.badge) + '</span>' : '';
+        return '<article class="public-offer-card"><div class="public-offer-image-wrap">' + image + badge + '</div><div class="public-offer-body"><h3 class="public-offer-title">' + escapeOfferHtml(offer.title) + '</h3><p class="public-offer-description">' + escapeOfferHtml(offer.subtitle || '') + '</p><div data-offer-button="' + escapeOfferHtml(offer.id) + '"></div></div></article>';
+      }).join('');
+      offers.forEach(function(offer) {
+        const target = area.querySelector('[data-offer-button="' + CSS.escape(String(offer.id)) + '"]');
+        if (target) target.appendChild(createOfferButton(offer));
+      });
+      section.classList.add('has-offers');
+    }
+
+    async function fetchPublicOffers(displayArea) {
+      const body = new URLSearchParams({ action: 'get_public_offers', display_area: displayArea });
+      const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: body, redirect: 'follow' });
+      const data = await response.json();
+      if (!data || data.status !== 'success') throw new Error(data && data.message ? data.message : 'تعذر جلب العروض');
+      return Array.isArray(data.offers) ? data.offers : [];
+    }
+
+    async function loadPublicOffers() {
+      try {
+        const results = await Promise.all([fetchPublicOffers('offers_section'), fetchPublicOffers('hero_banner')]);
+        renderOffersSection(results[0]);
+        renderHeroOffer(results[1]);
+      } catch (error) {
+        // لا يمنع تعذر تحميل العروض عمل نموذج الحجز أو بقية الصفحة.
+        console.warn('Offers could not be loaded:', error);
+      }
+    }
+
 
     // التعديل: إضافة دالة scrollToTop
     function scrollToTop() {
@@ -797,7 +914,7 @@
         if(coupon_code) message += `%0Aالكوبون المستخدم: ${coupon_code}`;
 
         // 🛑 رقم واتساب خدمة العملاء (المُعدَّل)
-        const whatsappNumber = '966920018591';
+        const whatsappNumber = '966503700676';
         const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(decodeURIComponent(message))}`;
 
         const formElement = document.getElementById('modalBookingForm');
@@ -1008,7 +1125,7 @@
 
     // 🛑 ضبط روابط الرقم (المُعدَّل إلى 966503700676)
     (function(){
-      const phone = '966920018591';
+      const phone = '966503700676';
       const fwh = document.getElementById('floatingWhatsappBtn');
       if(fwh) fwh.setAttribute('href', `https://wa.me/${phone}`);
       document.querySelectorAll('a[href^="https://wa.me/"]').forEach(a=> a.setAttribute('href', `https://wa.me/${phone}`));
@@ -1033,6 +1150,7 @@
 
     // footer year
     document.getElementById('year').textContent = new Date().getFullYear();
+    loadPublicOffers();
 
     // focus outlines
     document.querySelectorAll('.nav-pill,a,button').forEach(el=>{
