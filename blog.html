@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>مدونة كلين دي | دليل شامل لخدمات التنظيف بالرياض</title>
+  <meta name="description" content="أفضل شركة تنظيف بالرياض: دليل كلين دي الشامل لخدمات التنظيف العميق للمنازل والشركات." />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { cairo: ['Cairo', 'sans-serif'] },
+          colors: {
+            primary: '#0ea5e9',
+            dark: '#1e293b',
+            silver: '#f1f5f9',
+            skyDark: '#036b9a'
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #0ea5e9; --dark: #1e293b; --silver: #f1f5f9; --sky-dark: #036b9a; }
+    html,body { height:100%; }
+    body { font-family: 'Cairo', sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background: #ffffff; color: var(--dark); }
+
+    header { background: linear-gradient(90deg, #ffffff 0%, rgba(14,165,233,0.08) 45%, var(--sky-dark) 100%); box-shadow: 0 6px 20px rgba(2,6,23,0.08); }
+    .header-inner { padding-top:8px; padding-bottom:8px; }
+    .nav-pill {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:5px 10px; border-radius:9999px; background: rgba(255,255,255,0.9);
+      color:var(--dark); font-weight:600; text-decoration:none;
+      transition: transform .12s ease, background .12s ease, color .12s ease;
+      box-shadow: 0 4px 12px rgba(2,6,23,0.05);
+      font-size:0.86rem; white-space:nowrap;
+    }
+    .nav-pill:hover { transform: translateY(-2px); background: rgba(255,255,255,0.98); color:var(--primary); }
+    .nav-pill.active { background: var(--primary); color: #fff; }
+    .nav-scroll { display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .nav-scroll::-webkit-scrollbar { display:none; }
+
+    .floating-btn { box-shadow: 0 10px 30px rgba(2,6,23,0.12); display:flex; align-items:center; justify-content:center; position:fixed; left:20px; z-index:60; border:none; }
+    .floating-whatsapp { width:48px; height:48px; padding:0; border-radius:9999px; background:#16a34a; color:#fff; bottom:20px; text-decoration:none; }
+    .floating-whatsapp:hover { background:#13833f; }
+
+    @media (max-width:640px){
+      .nav-pill { padding:5px 8px; font-size:0.82rem; }
+      .floating-whatsapp { width:44px; height:44px; bottom:18px; left:16px; }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    /* الأسئلة الشائعة التفاعلية */
+    .faq-item { border-radius: 12px; overflow:hidden; background:#f1f5f9; border:1px solid transparent; transition: background .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .faq-item summary { list-style:none; cursor:pointer; padding:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-weight:700; }
+    .faq-item summary::-webkit-details-marker { display:none; }
+    .faq-item summary::marker { content:""; }
+    .faq-icon { width:26px; height:26px; border-radius:9999px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:900; font-size:1.1rem; transition: transform .3s ease, background .2s ease; }
+    .faq-item[open] { background:#ffffff; box-shadow:0 12px 28px rgba(14,165,233,0.14); border-color: rgba(14,165,233,0.2); }
+    .faq-item[open] .faq-icon { transform: rotate(135deg); background: var(--sky-dark); }
+    .faq-item p { padding:0 16px 16px; margin:0; color:#334155; animation: faqFade .25s ease; }
+    @keyframes faqFade { from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
+    .faq-item:hover summary { color: var(--primary); }
+
+    /* فهرس المحتويات */
+    .toc-wrap { background:#fff; border:1px solid rgba(14,165,233,0.15); border-radius:16px; padding:18px 20px; margin-bottom:2rem; box-shadow:0 8px 24px rgba(2,6,23,0.05); }
+    .toc-wrap h2 { font-size:1.1rem; font-weight:900; margin-bottom:10px; color:var(--dark); }
+    .toc-list { display:flex; flex-wrap:wrap; gap:8px; }
+    .toc-list a { display:inline-flex; align-items:center; padding:6px 14px; border-radius:9999px; background:var(--silver); color:var(--dark); font-size:0.85rem; font-weight:600; text-decoration:none; transition: all .15s ease; }
+    .toc-list a:hover { background:var(--primary); color:#fff; transform:translateY(-1px); }
+
+    /* زر الرجوع للأعلى */
+    .floating-top { width:44px; height:44px; padding:0; border-radius:9999px; background:#fff; color:var(--primary); bottom:20px; right:20px; left:auto; text-decoration:none; border:1px solid rgba(14,165,233,0.25); opacity:0; pointer-events:none; transform:translateY(10px); transition: opacity .25s ease, transform .25s ease; }
+    .floating-top.show { opacity:1; pointer-events:auto; transform:translateY(0); }
+    .floating-top:hover { background:var(--primary); color:#fff; }
+    @media (max-width:640px){ .floating-top { width:40px; height:40px; bottom:18px; right:16px; } }
+
+    h2[id] { scroll-margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <a href="https://wa.me/966503700676" target="_blank" aria-label="واتساب" class="floating-btn floating-whatsapp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" style="width:20px;height:20px;">
+      <path d="M16 0C7.164 0 0 6.832 0 15.264c0 2.688.736 5.2 2.016 7.44L0 32l9.472-2.496c1.92.528 3.936.8 6.048.8 8.832 0 16-6.832 16-15.264S24.832 0 16 0z"/>
+    </svg>
+  </a>
+
+  <button id="backToTop" aria-label="الرجوع للأعلى" class="floating-btn floating-top">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </button>
+
+  <header>
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 header-inner">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="brand text-primary font-bold text-lg">كلين دي</a>
+      </div>
+      <nav class="nav-scroll" aria-label="رابط الأقسام">
+        <a href="index.html#services" class="nav-pill">الخدمات</a>
+        <a href="index.html#pricing" class="nav-pill">الأسعار</a>
+        <a href="index.html#offers" class="nav-pill">العروض</a>
+        <a href="index.html#about" class="nav-pill">من نحن</a>
+        <a href="index.html#contact" class="nav-pill">تواصل معنا</a>
+        <a href="blog.html" class="nav-pill active">المدونة</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="py-20 bg-silver px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <a href="index.html" class="inline-flex items-center gap-1 text-primary font-bold mb-6 hover:underline">→ العودة للرئيسية</a>
+
+      <h1 class="text-3xl font-bold text-center mb-3">مدونة كلين دي</h1>
+      <p class="text-center text-gray-600 mb-10">أفضل شركة تنظيف بالرياض: دليل كلين دي الشامل لخدمات التنظيف العميق للمنازل والشركات</p>
+
+      <img src="./14.jpg" alt="كلين دي لخدمات التنظيف" class="w-full h-72 md:h-96 object-cover rounded-2xl mb-8 shadow-lg" />
+
+      <div class="toc-wrap">
+        <h2>محتويات المقال</h2>
+        <div class="toc-list">
+          <a href="#why-cleanday">لماذا كلين دي؟</a>
+          <a href="#after-construction">تنظيف ما بعد البناء</a>
+          <a href="#furniture-steam">تنظيف المفروشات بالبخار</a>
+          <a href="#offices">تنظيف المكاتب والشركات</a>
+          <a href="#coverage">مناطق التغطية</a>
+          <a href="#faq">الأسئلة الشائعة</a>
+          <a href="#stain-guide">إزالة البقع الطارئة</a>
+          <a href="#checklist">قائمة مراجعة التنظيف</a>
+        </div>
+      </div>
+
+      <div class="text-lg text-gray-700 space-y-4 leading-relaxed text-right bg-white rounded-2xl shadow p-6 md:p-10">
+
+        <p>تعد شركة كلين دي (Clean Day) المؤسسة السعودية المعتمدة والمنتشرة في كافة أحياء مدينة الرياض لتوفير خدمات التنظيف العميق للقطاعين السكني والتجاري. نعتمد على طاقم عمل متدرب وأدوات متطورة ومواد آمنة وصديقة للبيئة لتقديم أعلى مستويات النظافة. للحجز الفوري ومعاينة باقات الأسعار، يمكنك التواصل عبر الرقم الموحد <a href="tel:966920018591" class="text-primary font-bold hover:underline">920018591</a> أو الرقم المباشر <a href="tel:966503700676" class="text-primary font-bold hover:underline">0503700676</a>.</p>
+
+        <h2 id="why-cleanday" class="text-2xl font-extrabold text-dark pt-4">لماذا تختار شركة كلين دي كخيارك الأول لتنظيف العقارات بالرياض؟</h2>
+        <p>تبحث عن شركة تنظيف مجربة وموثوقة بالرياض تجمع بين الكفاءة والأسعار التنافسية؟ شركة كلين دي (Clean Day) توفر لك الحل المتكامل. نعتمد على استراتيجية عمل تنفذ وفق أعلى معايير الجودة العالمية، حيث نستخدم أجهزة الشفط والتجفيف الفائق ومواد تنظيف معتمدة وآمنة على صحة الأطفال والأليفة، مع تقديم ضمان شامل على جودة العمل. سواء كنت تبحث عن تنظيف دوري للمكاتب أو غسيل فوري للمجالس أو جلي أرضيات قبل الانتقال، فإن كلين دي هي اختيارك الضامن للنتيجة المثالية في جميع أحياء الرياض.</p>
+
+        <div class="grid md:grid-cols-2 gap-4 my-6">
+          <img src="./6.jpg" alt="تنظيف بعد البناء" class="rounded-xl shadow h-56 w-full object-cover" />
+          <img src="./7.jpg" alt="تنظيف الزجاج والواجهات" class="rounded-xl shadow h-56 w-full object-cover" />
+        </div>
+
+        <h2 id="after-construction" class="text-2xl font-extrabold text-dark pt-4">تنظيف المنازل والفلل بعد البناء والتشطيب بالرياض</h2>
+        <p>تتطلب عمليات البناء والترميم عناية خاصة لإزالة الآثار الصلبة والغبار المترسب قبل السكن، وتقدم شركة كلين دي حلولاً شاملة تشمل:</p>
+        <ul class="list-disc pr-6 space-y-2">
+          <li><strong>إزالة بقايا البناء والدهانات:</strong> تنظيف وإزالة بقع الدهانات، الأسمنت، والغراء من على الأرضيات والسيراميك والنوافذ بأمان.</li>
+          <li><strong>تنظيف الزجاج والواجهات:</strong> تلميع الواجهات الزجاجية الداخلية والخارجية وإزالة الأتربة الملتصقة بها لضمان أعلى مستوى من الشفافية.</li>
+          <li><strong>التنظيف التأهيلي الشامل:</strong> كنس ومسح وتعقيم كافة الغرف والممرات والسلالم لتصبح جاهزة للسكن السريع والمباشر.</li>
+        </ul>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
+          <img src="./13.jpg" alt="غسيل المفروشات" class="rounded-xl shadow h-40 w-full object-cover" />
+          <img src="./11.jpg" alt="تنظيف السجاد" class="rounded-xl shadow h-40 w-full object-cover" />
+          <img src="./10.jpg" alt="تنظيف الكنب" class="rounded-xl shadow h-40 w-full object-cover" />
+          <img src="./9.jpg" alt="تنظيف الستائر" class="rounded-xl shadow h-40 w-full object-cover" />
+        </div>
+
+        <h2 id="furniture-steam" class="text-2xl font-extrabold text-dark pt-4">غسيل وتنظيف المفروشات والأثاث بالبخار في الرياض</h2>
+        <p>تعرض المفروشات في منازل ومجالس الرياض للأتربة والبقع اليومية يقلل من عمرها الافتراضي، وتوفر كلين دي تقنيات غسيل وتنظيف احترافية تشمل:</p>
+        <ul class="list-disc pr-6 space-y-2">
+          <li><strong>تنظيف المجالس والكنب:</strong> إزالة البقع الصعبة والرواسب بأحدث أجهزة التنظيف والتجفيف مع الحفاظ على جودة وألوان النسيج.</li>
+          <li><strong>غسيل السجاد والموكيت:</strong> تنظيف عميق وتعقيم حراري للتخلص من البكتيريا، الجراثيم، وإعادة إحياء ألياف السجاد.</li>
+          <li><strong>تنظيف الستائر والفرش:</strong> غسيل وتطهير الستائر ومراتب الأسرة في مكانها دون الحاجة إلى الفك والتركيب.</li>
+        </ul>
+
+        <img src="./8.jpg" alt="تنظيف المكاتب والشركات" class="rounded-xl shadow w-full h-64 object-cover my-6" />
+
+        <h2 id="offices" class="text-2xl font-extrabold text-dark pt-4">تنظيف المكاتب والشركات والمرافق التجارية بالرياض</h2>
+        <p>توفير بيئة عمل صحية ونظيفة يزيد من إنتاجية الموظفين ويعزز المظهر الاحترافي لشركتك أمام العملاء:</p>
+        <ul class="list-disc pr-6 space-y-2">
+          <li><strong>تنظيف المكاتب والأجهزة الإلكترونية:</strong> تعقيم الأسطح، الطاولات، وشاشات الكمبيوتر والأجهزة الإلكترونية بمواد مخصصة لا تسبب أي أضرار.</li>
+          <li><strong>تنظيف كنب ومجالس الشركات:</strong> غسيل وتنظيف أثاث صالات الانتظار ومكاتب المدراء وقاعات الاجتماعات.</li>
+          <li><strong>نظافة الممرات والمرافق:</strong> جلي وتلميع الأرضيات، وتنظيف الممرات ودورات المياه بشكل دوري ومستمر.</li>
+        </ul>
+
+        <h2 id="coverage" class="text-2xl font-extrabold text-dark pt-4">نطاق تغطية خدمات شركة كلين دي في أحياء الرياض</h2>
+        <p>تغطي شركة كلين دي كافة أحياء ومناطق مدينة الرياض لضمان سرعة الاستجابة والالتزام التام بالمواعيد:</p>
+        <ul class="list-disc pr-6 space-y-2">
+          <li><strong>أحياء شمال الرياض:</strong> الملقا، العقيق، الصحافة، النرجس، الياسمين، حطين، القيروان، العارض، الغدير، النفل، الربيع، التعاون.</li>
+          <li><strong>أحياء شرق الرياض:</strong> الرمال، المونسية، اليرموك، إشبيلية، غرناطة، الروضة، الريان، القدس، الحمراء، الخليج.</li>
+          <li><strong>أحياء وسط وجنوب الرياض:</strong> العليا، السليمانية، الملز، الشفا، العزيزية، السويدي، المنصورة، بدر، الدار البيضاء.</li>
+          <li><strong>أحياء غرب الرياض:</strong> لبن، ظهرة لبن، طويق، العوالي، نمار، الدرعية، عرقة.</li>
+        </ul>
+
+        <h2 class="text-2xl font-extrabold text-dark pt-4">جاهز لنظافة استثنائية لعقارك أو مكتبك؟</h2>
+        <p>لا تدع الأتربة والبقع تؤثر على راحة بالك أو مظهر منشأتك. استعن بالفريق الخبير من شركة كلين دي (Clean Day) بالرياض واحصل على خدمة تنظيف متكاملة تعيد لعقارك رونقه. احجز خدمتك الآن عبر الرقم الموحد <a href="tel:966920018591" class="text-primary font-bold hover:underline">920018591</a> أو عبر الواتساب على <a href="https://wa.me/966503700676" target="_blank" class="text-green-600 font-bold hover:underline">0503700676</a>.</p>
+
+        <h2 id="faq" class="text-2xl font-extrabold text-dark pt-6">الأسئلة الشائعة حول خدمات التنظيف بالرياض</h2>
+        <div class="space-y-3">
+          <details class="faq-item">
+            <summary>ما هي أفضل شركة تنظيف منازل ومكاتب في الرياض؟ <span class="faq-icon">+</span></summary>
+            <p>تعد شركة كلين دي (Clean Day) من أبرز وأفضل الشركات المتخصصة بالرياض، حيث تقدم خدمات التنظيف العميق للمنازل، الفلل، شقق التشطيب، والمكاتب باستخدام معدات حديثة وطاقم متخصص.</p>
+          </details>
+          <details class="faq-item">
+            <summary>هل توفر كلين دي خدمة التنظيف بعد البناء والتشطيب؟ <span class="faq-icon">+</span></summary>
+            <p>نعم، توفر كلين دي باقات متخصصة للتنظيف التأهيلي بعد البناء تشمل إزالة آثار الدهانات والأسمنت، تنظيف النوافذ والزجاج، وتجهيز العقار بالكامل للأنشطة السكنية أو التجارية.</p>
+          </details>
+          <details class="faq-item">
+            <summary>ما هي أرقام التواصل والحجز مع شركة كلين دي بالرياض؟ <span class="faq-icon">+</span></summary>
+            <p>الرقم الموحد: 920018591 — الجوال / الواتساب: 0503700676 — البريد الإلكتروني: info@cleanday.sa</p>
+          </details>
+          <details class="faq-item">
+            <summary>هل مواد التنظيف المستخدمة آمنة على الأطفال والحيوانات الأليفة؟ <span class="faq-icon">+</span></summary>
+            <p>نعم، تعتمد شركة كلين دي على مواد تنظيف ومطهرات مصرحة وآمنة تماماً خالية من المواد الكيميائية الضارة، مما يضمن سلامة أفراد الأسرة والحيوانات الأليفة فور انتهاء العمل.</p>
+          </details>
+          <details class="faq-item">
+            <summary>كم يستغرق وقت تنظيف الكنب أو المجالس حتى يجف تماماً؟ <span class="faq-icon">+</span></summary>
+            <p>بفضل تقنيات التجفيف والشفط الحديثة التي تستخدمها كلين دي بالرياض، يجف الكنب والمجالس في غضون 2 إلى 4 ساعات فقط من انتهاء العملية.</p>
+          </details>
+          <details class="faq-item">
+            <summary>هل توفر كلين دي عقود تنظيف دورية للشركات والمكاتب؟ <span class="faq-icon">+</span></summary>
+            <p>نعم، توفر شركة كلين دي خطط وعقود تنظيف مرنة (يومية، أسبوعية، شهرية، سنوية) متخصصة للشركات والمكاتب والمؤسسات التجارية في الرياض بأسعار خاصة.</p>
+          </details>
+        </div>
+
+        <h2 id="stain-guide" class="text-2xl font-extrabold text-dark pt-6">دليل كلين دي السريع للتعامل مع بقع المفروشات الطارئة قبل الجفاف</h2>
+        <p>تحدث الحوادث اليومية بسكب القهوة أو العصائر على السجاد والكنب، والسرعة هي العامل الأهم لإنقاذ الأنسجة. إليك خطوات التعامل المباشر:</p>
+        <ol class="list-decimal pr-6 space-y-2">
+          <li><strong>بقع القهوة والشاي:</strong> ضع منديل ورقي فوراً لامتصاص السائل دون تحريكه أو حكه لكي لا تنتشر البقعة. رش قليلاً من الماء الفاتر مع نقطة خل أبيض، ثم جفف بقطعة قماش بيضاء بنقر خفيف.</li>
+          <li><strong>بقع الدهون والزيوت:</strong> رش كمية من نشا الذرة أو بودرة أطفال على البقعة المباشرة واتركها 15 دقيقة لامتصاص الدهون، ثم اشفطها بالمكنسة الكهربائية قبل غسيل المنطقة.</li>
+          <li><strong>بقع الحبر والألوان:</strong> استخدم قطعة قطن مبللة بالكحول الطبي بضغط خفيف جداً على البقعة من الخارج إلى الداخل لمنع اتساعها.</li>
+        </ol>
+        <p class="text-sm text-gray-500">تنويه من خبراء كلين دي: تجنب استخدام المياه الساخنة على البقع البروتينية أو البقع الغامقة لأنها تثبت اللون داخل ألياف النسيج. في حال صعوبة البقعة، اطلب خدمة التنظيف بالبخار الاحترافية من كلين دي.</p>
+
+        <h2 id="checklist" class="text-2xl font-extrabold text-dark pt-6">قائمة مراجعة لتنظيف البيت بعد البناء والتشطيب</h2>
+        <p>قبل الانتقال لبيتك الجديد بالرياض، تأكد من إتمام خطة التنظيف التأهيلي التالية بالترتيب الصحيح لضمان عدم تلف الأسطح:</p>
+        <p class="font-bold mt-3">المرحلة الأولى (الشفط الجاف والجلي):</p>
+        <ul class="list-disc pr-6 space-y-1">
+          <li>شفط الغبار الناعم من الفتحات، التكييف، ومجاري النوافذ.</li>
+          <li>إزالة آثار الدهانات والأسمنت من السيراميك والرخام باستخدام كشاطات مخصصة.</li>
+          <li>جلي الأرضيات وتلميعها للتخلص من بقايا الترويبة.</li>
+        </ul>
+        <p class="font-bold mt-3">المرحلة الثانية (الأبواب والزجاج):</p>
+        <ul class="list-disc pr-6 space-y-1">
+          <li>تنظيف وإزالة ملصقات الحماية عن إطارات الألومنيوم والزجاج.</li>
+          <li>مسح الأبواب الخشبية والمقابض بملمع خشب خالٍ من المواد الكيميائية الحارقة.</li>
+        </ul>
+        <p class="font-bold mt-3">المرحلة الثالثة (المطابخ والحمامات):</p>
+        <ul class="list-disc pr-6 space-y-1">
+          <li>غسيل جدران السيراميك والشفاطات.</li>
+          <li>تعقيم الأحواض، الكراسي، والصنابير بمواد مطهرة.</li>
+        </ul>
+
+        <h2 class="text-2xl font-extrabold text-dark pt-6">5 خطوات للمحافظة على بيئة عمل صحية ونظيفة في شركتك</h2>
+        <p>المكتب النظيف يعزز من صحة الموظفين ويقلل من الإجازات المرضية. إليك أهم الممارسات التشغيلية:</p>
+        <ol class="list-decimal pr-6 space-y-2">
+          <li><strong>التعقيم اليومي لنقاط التلامس:</strong> التركيز على تعقيم مقابض الأبواب، أزرار المصاعد، وماكينات القهوة.</li>
+          <li><strong>التنظيف الآمن للأجهزة:</strong> استخدام ممسحات المايكروفايبر مع سوائل مخصصة لتنظيف لوحات المفاتيح والشاشات دون إتلافها.</li>
+          <li><strong>التهوئة الدورية وتغيير الفلاتر:</strong> تنقية الهواء داخل المكاتب تقلل من ترسب الأتربة على الأثاث والملفات.</li>
+          <li><strong>جدول غسيل دوري للمجالس والموكيت:</strong> العناية بموكيت الشركات وقاعات الاجتماعات مرة كل 3 أشهر على الأقل.</li>
+        </ol>
+
+        <div class="text-center pt-8">
+          <a href="https://wa.me/966503700676?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D9%85%D9%88%D8%B9%D8%AF%20%D8%AA%D9%86%D8%B8%D9%8A%D9%81" target="_blank" class="inline-block px-8 py-3 bg-primary text-white font-bold rounded-full hover:bg-skyDark transition">احجز خدمتك الآن عبر واتساب</a>
+        </div>
+      </div>
+
+      <div class="text-center mt-10">
+        <a href="index.html" class="inline-flex items-center gap-1 text-primary font-bold hover:underline">→ العودة للصفحة الرئيسية</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-6 text-center text-sm text-gray-500 bg-white border-t">
+    <span id="year"></span> © كلين دي — جميع الحقوق محفوظة
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) backToTop.classList.add('show');
+        else backToTop.classList.remove('show');
+      }, { passive: true });
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  </script>
+
+</body>
+</html>
