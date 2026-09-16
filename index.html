@@ -48,7 +48,7 @@
     }
 
     .nav-pill {
-      display:inline-flex; align-items:center; justify-content:center;
+      display:inline-flex; align-items:center; justify-content:center; gap:5px;
       padding:5px 10px; border-radius:9999px; background: rgba(255,255,255,0.9);
       color:var(--dark); font-weight:600; text-decoration:none;
       transition: transform .12s ease, background .12s ease, color .12s ease;
@@ -60,6 +60,7 @@
     .header-inner { padding-top:8px; padding-bottom:8px; }
     .nav-scroll { display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .nav-scroll::-webkit-scrollbar { display:none; }
+    .nav-icon { display:none; font-size:1rem; line-height:1; }
 
     .service-card {
         cursor: pointer;
@@ -67,7 +68,8 @@
     }
     .service-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 18px 40px rgba(2,6,23,0.12); }
 
-    .floating-btn { box-shadow: 0 10px 30px rgba(2,6,23,0.12); transition: transform .12s ease, opacity .12s ease; display:flex; align-items:center; justify-content:center; position:fixed; left:20px; z-index:60; border:none; }
+    .floating-btn { box-shadow: 0 10px 30px rgba(2,6,23,0.12); transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .12s ease; display:flex; align-items:center; justify-content:center; position:fixed; left:20px; z-index:60; border:none; }
+    .floating-btn.raised { transform: translateY(-38px); }
     .floating-whatsapp { width:48px; height:48px; padding:0; border-radius:9999px; background: #16a34a; color:#fff; bottom:20px; z-index:50; text-decoration:none; display:flex; align-items:center; justify-content:center; }
     .floating-booking { padding:10px 14px; border-radius:9999px; background:var(--primary); color:#fff; font-weight:700; font-size:0.95rem; bottom:86px; z-index:70; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden; }
     .floating-booking:hover { background:#0891b2; }
@@ -79,6 +81,55 @@
       .floating-booking { padding:8px 12px; font-size:0.92rem; bottom:78px; left:16px; }
       .floating-whatsapp { width:44px; height:44px; bottom:18px; left:16px; }
     }
+
+    /* على الشاشات الصغيرة جداً: تتحول الأزرار لأيقونات مدمجة فتظهر كلها بدون تمرير */
+    @media (max-width:430px){
+      .header-inner { padding-top:6px; padding-bottom:6px; }
+      header .brand { font-size:0.92rem; }
+      .nav-scroll { gap:5px; }
+      .nav-pill { width:32px; height:32px; padding:0; border-radius:9999px; transition: width .25s ease, padding .25s ease, background .15s ease; }
+      .nav-pill .nav-label { display:none; }
+      .nav-icon { display:inline-block; }
+      /* الزر النشط فقط يتوسع ليظهر اسمه، والباقي يبقى أيقونة */
+      .nav-pill.active { width:auto; padding:0 12px; gap:5px; }
+      .nav-pill.active .nav-label { display:inline-block; }
+    }
+
+    /* الشريط العائم السفلي — يظهر عند النزول ويختفي عند الصعود (للجوال والتابلت) */
+    .floating-nav {
+      position:fixed; left:50%; bottom:16px; z-index:65;
+      transform:translateX(-50%) translateY(140%);
+      display:flex; align-items:center; gap:5px;
+      background: rgba(255,255,255,0.22);
+      border: 1px solid rgba(255,255,255,0.4);
+      backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+      padding:5px; border-radius:9999px;
+      box-shadow: 0 14px 34px rgba(2,6,23,0.22), inset 0 1px 0 rgba(255,255,255,0.5);
+      opacity:0; pointer-events:none;
+      transition: transform .35s cubic-bezier(.2,.8,.2,1), opacity .3s ease;
+      max-width: calc(100% - 24px); overflow-x:auto; scrollbar-width:none;
+    }
+    .floating-nav::-webkit-scrollbar { display:none; }
+    .floating-nav.show { transform:translateX(-50%) translateY(0); opacity:1; pointer-events:auto; }
+    .floating-pill {
+      display:flex; align-items:center; justify-content:center; gap:5px;
+      width:32px; height:32px; border-radius:9999px;
+      background: rgba(255,255,255,0.35); color:var(--dark);
+      text-decoration:none; flex-shrink:0; white-space:nowrap; overflow:hidden;
+      font-weight:700; font-size:0.76rem;
+      transition: width .3s ease, padding .3s ease, background .2s ease, color .2s ease;
+    }
+    .floating-pill .nav-icon { display:inline-block; font-size:0.85rem; }
+    .floating-pill .nav-label { display:none; }
+    .floating-pill.active { width:auto; padding:0 12px; background: rgba(14,165,233,0.85); color:#fff; box-shadow: 0 6px 16px rgba(14,165,233,0.35); }
+    .floating-pill.active .nav-label { display:inline-block; }
+    @media (min-width:768px){ .floating-nav { display:none; } }
+
+    /* إخفاء الهيدر العلوي بسلاسة عند إظهار الشريط العائم */
+    #siteHeader { transition: transform .35s cubic-bezier(.2,.8,.2,1), background .35s ease, box-shadow .35s ease; }
+    #siteHeader.hide-on-scroll { transform: translateY(-100%); }
+    .header-spacer { transition: height .35s ease; }
+    .header-spacer.collapsed { height:0 !important; }
 
     .header-spacer { height:64px; }
 
@@ -319,19 +370,29 @@
         <div class="brand text-primary font-bold text-lg cursor-pointer" onclick="scrollToTop()">كلين دي</div>
       </div>
 
-      <nav class="nav-scroll" aria-label="رابط الأقسام">
-        <a href="#services" class="nav-pill nav-link" data-target="services">الخدمات</a>
-        <a href="#pricing" class="nav-pill nav-link" data-target="pricing">الأسعار</a>
-        <a href="#offers" class="nav-pill nav-link" data-target="offers">العروض</a>
-        <a href="#why-choose-us" class="nav-pill nav-link" data-target="why-choose-us">مميزاتنا</a>
-        <a href="#about" class="nav-pill nav-link" data-target="about">من نحن</a>
-        <a href="#contact" class="nav-pill nav-link" data-target="contact">تواصل معنا</a>
-        <a href="blog.html" class="nav-pill">المدونة</a>
+      <nav class="nav-scroll" id="mainNav" aria-label="رابط الأقسام">
+        <a href="#offers" class="nav-pill nav-link" data-target="offers" aria-label="العروض"><span class="nav-icon">🎁</span><span class="nav-label">العروض</span></a>
+        <a href="#services" class="nav-pill nav-link" data-target="services" aria-label="الخدمات"><span class="nav-icon">🧹</span><span class="nav-label">الخدمات</span></a>
+        <a href="#pricing" class="nav-pill nav-link" data-target="pricing" aria-label="الأسعار"><span class="nav-icon">🏷️</span><span class="nav-label">الأسعار</span></a>
+        <a href="#why-choose-us" class="nav-pill nav-link" data-target="why-choose-us" aria-label="مميزاتنا"><span class="nav-icon">⭐</span><span class="nav-label">مميزاتنا</span></a>
+        <a href="#about" class="nav-pill nav-link" data-target="about" aria-label="من نحن"><span class="nav-icon">ℹ️</span><span class="nav-label">من نحن</span></a>
+        <a href="#contact" class="nav-pill nav-link" data-target="contact" aria-label="التواصل"><span class="nav-icon">📞</span><span class="nav-label">التواصل</span></a>
+        <a href="blog.html" class="nav-pill" aria-label="المدونة"><span class="nav-icon">📰</span><span class="nav-label">المدونة</span></a>
       </nav>
     </div>
   </header>
 
-  <div class="header-spacer"></div>
+  <div class="header-spacer" id="headerSpacer"></div>
+
+  <nav id="floatingNav" class="floating-nav" aria-label="التنقل السريع العائم">
+    <a href="#offers" class="floating-pill nav-link" data-target="offers" aria-label="العروض"><span class="nav-icon">🎁</span><span class="nav-label">العروض</span></a>
+    <a href="#services" class="floating-pill nav-link" data-target="services" aria-label="الخدمات"><span class="nav-icon">🧹</span><span class="nav-label">الخدمات</span></a>
+    <a href="#pricing" class="floating-pill nav-link" data-target="pricing" aria-label="الأسعار"><span class="nav-icon">🏷️</span><span class="nav-label">الأسعار</span></a>
+    <a href="#why-choose-us" class="floating-pill nav-link" data-target="why-choose-us" aria-label="مميزاتنا"><span class="nav-icon">⭐</span><span class="nav-label">مميزاتنا</span></a>
+    <a href="#about" class="floating-pill nav-link" data-target="about" aria-label="من نحن"><span class="nav-icon">ℹ️</span><span class="nav-label">من نحن</span></a>
+    <a href="#contact" class="floating-pill nav-link" data-target="contact" aria-label="التواصل"><span class="nav-icon">📞</span><span class="nav-label">التواصل</span></a>
+    <a href="blog.html" class="floating-pill" aria-label="المدونة"><span class="nav-icon">📰</span><span class="nav-label">المدونة</span></a>
+  </nav>
 
   <section id="hero-section" class="relative h-[80vh] bg-cover bg-center bg-no-repeat" style="background-image:url('./header.jpg');">
     <div class="absolute inset-0 bg-black/40"></div>
@@ -999,7 +1060,9 @@
       const header = document.getElementById('siteHeader');
       const brand = document.querySelector('.brand');
       const navLinks = Array.from(document.querySelectorAll('.nav-link'));
-      const sections = ['services','pricing','why-choose-us','about','contact'].map(id=>document.getElementById(id)).filter(Boolean); // 🛑 تحديث: ترتيب الأقسام
+      const navContainer = document.getElementById('mainNav');
+      const sections = ['offers','services','pricing','why-choose-us','about','contact'].map(id=>document.getElementById(id)).filter(Boolean); // 🛑 تحديث: ترتيب الأقسام
+      let lastActiveId = '';
 
       function onScroll(){
         if(window.scrollY > 20) {
@@ -1016,12 +1079,33 @@
         for(let i=0;i<sections.length;i++){
           const s = sections[i];
           const rect = s.getBoundingClientRect();
+          if(rect.height === 0) continue; // 🩹 تجاهل الأقسام المخفية (مثل "العروض" عند عدم وجود عروض فعّالة)
           if(rect.top <= 120) currentId = s.id;
         }
+
+        // 🩹 إصلاح: إذا وصل المستخدم فعلياً لنهاية الصفحة (حتى لو قسم "التواصل" قصيراً
+        // ولا يصل للحد rect.top<=120)، نفعّل آخر قسم يدوياً
+        const atPageBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 4);
+        if(atPageBottom && sections.length){
+          currentId = sections[sections.length - 1].id;
+        }
+
         navLinks.forEach(a => {
           a.classList.remove('active');
           if(a.getAttribute('href') === `#${currentId}`) a.classList.add('active');
         });
+
+        // 🎯 تمرير الشريط أفقياً تلقائياً لإظهار الأيقونة النشطة حتى لو كانت خارج نطاق الرؤية
+        if(currentId && currentId !== lastActiveId && navContainer){
+          lastActiveId = currentId;
+          const activeLink = navContainer.querySelector(`.nav-link[href="#${currentId}"]`);
+          if(activeLink){
+            const cRect = navContainer.getBoundingClientRect();
+            const lRect = activeLink.getBoundingClientRect();
+            const offset = (lRect.left + lRect.right)/2 - (cRect.left + cRect.right)/2;
+            navContainer.scrollBy({ left: offset, behavior:'smooth' });
+          }
+        }
       }
 
       navLinks.forEach(a=>{
@@ -1037,6 +1121,76 @@
 
       window.addEventListener('scroll', onScroll, { passive:true });
       window.addEventListener('load', onScroll);
+    })();
+
+    // الشريط العائم السفلي: يظهر عند النزول ويختفي الهيدر العلوي، والعكس عند الصعود (جوال/تابلت فقط)
+    (function(){
+      const header = document.getElementById('siteHeader');
+      const spacer = document.getElementById('headerSpacer');
+      const floatingNav = document.getElementById('floatingNav');
+      const whatsappBtn = document.getElementById('floatingWhatsappBtn');
+      const bookingBtn = document.getElementById('floatingBookingBtn');
+      if(!header || !floatingNav) return;
+
+      function setRaised(raised){
+        if(whatsappBtn) whatsappBtn.classList.toggle('raised', raised);
+        if(bookingBtn) bookingBtn.classList.toggle('raised', raised);
+      }
+
+      let lastY = window.scrollY;
+      let ticking = false;
+      const THRESHOLD = 12;      // أقل مسافة تمرير لاعتبارها حركة فعلية
+      const REVEAL_AFTER = 90;   // لا يبدأ الإخفاء إلا بعد النزول عن هذه المسافة من الأعلى
+
+      function isMobile(){ return window.innerWidth < 768; }
+
+      function update(){
+        const y = window.scrollY;
+        if(!isMobile() || y <= REVEAL_AFTER){
+          header.classList.remove('hide-on-scroll');
+          if(spacer) spacer.classList.remove('collapsed');
+          floatingNav.classList.remove('show');
+          setRaised(false);
+          lastY = y;
+          ticking = false;
+          return;
+        }
+
+        const diff = y - lastY;
+        if(Math.abs(diff) > THRESHOLD){
+          if(diff > 0){
+            // نزول: إخفاء الهيدر وإظهار الشريط العائم
+            header.classList.add('hide-on-scroll');
+            if(spacer) spacer.classList.add('collapsed');
+            floatingNav.classList.add('show');
+            setRaised(true);
+          } else {
+            // صعود: إظهار الهيدر وإخفاء الشريط العائم
+            header.classList.remove('hide-on-scroll');
+            if(spacer) spacer.classList.remove('collapsed');
+            floatingNav.classList.remove('show');
+            setRaised(false);
+          }
+          lastY = y;
+        }
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', function(){
+        if(!ticking){
+          window.requestAnimationFrame(update);
+          ticking = true;
+        }
+      }, { passive:true });
+
+      window.addEventListener('resize', function(){
+        if(!isMobile()){
+          header.classList.remove('hide-on-scroll');
+          if(spacer) spacer.classList.remove('collapsed');
+          floatingNav.classList.remove('show');
+          setRaised(false);
+        }
+      });
     })();
 
     // التنقل الآلي للموبايل
