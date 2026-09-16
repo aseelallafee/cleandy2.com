@@ -31,7 +31,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root { --primary: #0ea5e9; --dark: #1e293b; --silver: #f1f5f9; --sky-dark: #036b9a; }
-    html,body { height:100%; }
+    html,body { height:100%; overflow-anchor: none; }
     body { font-family: 'Cairo', sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background: #ffffff; color: var(--dark); scroll-behavior: smooth; }
     header { transition: all .25s ease, background .35s ease; }
 
@@ -1139,8 +1139,10 @@
 
       let lastY = window.scrollY;
       let ticking = false;
-      const THRESHOLD = 12;      // أقل مسافة تمرير لاعتبارها حركة فعلية
+      let lastToggleTime = 0;
+      const THRESHOLD = 15;      // أقل مسافة تمرير لاعتبارها حركة فعلية
       const REVEAL_AFTER = 90;   // لا يبدأ الإخفاء إلا بعد النزول عن هذه المسافة من الأعلى
+      const COOLDOWN_MS = 350;   // 🩹 منع تبديل الحالة أكثر من مرة خلال فترة قصيرة (يمنع الوميض)
 
       function isMobile(){ return window.innerWidth < 768; }
 
@@ -1157,7 +1159,8 @@
         }
 
         const diff = y - lastY;
-        if(Math.abs(diff) > THRESHOLD){
+        const now = Date.now();
+        if(Math.abs(diff) > THRESHOLD && (now - lastToggleTime) > COOLDOWN_MS){
           if(diff > 0){
             // نزول: إخفاء الهيدر وإظهار الشريط العائم
             header.classList.add('hide-on-scroll');
@@ -1172,6 +1175,7 @@
             setRaised(false);
           }
           lastY = y;
+          lastToggleTime = now;
         }
         ticking = false;
       }
